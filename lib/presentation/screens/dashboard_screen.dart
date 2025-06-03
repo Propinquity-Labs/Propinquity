@@ -14,7 +14,7 @@ class DashboardScreen extends ConsumerWidget {
           child: Text("Testa"),
         ),
         bottomNavigationBar: DefaultNavBar(
-          navItems: <NavItem>[NavItem()],
+          navItems: <NavItem>[NavItem(), NavItem()],
           color: Colors.red,
         ));
   }

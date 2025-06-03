@@ -26,7 +26,7 @@ class DefaultNavBar extends ConsumerWidget {
 
     return Container(
       height: 60,
-      decoration: const BoxDecoration(color: Colors.amber),
+      decoration: const BoxDecoration(color: Color.fromRGBO(234, 43, 121, 1)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: navItems,
