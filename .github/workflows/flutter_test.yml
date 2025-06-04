@@ -15,24 +15,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          flutter-version: '3.22.0' # 🔧 use exact version to avoid 'stable' issues
+          channel: 'stable'         # optional but clearer
+
+      - name: Flutter Version
+        run: flutter --version
 
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Run Tests with Coverage & JUnit Output
-        run: |
-          flutter test --machine > test_output.log
-          cat test_output.log | jq -s -R -r 'split("\n") | map(select(length > 0)) | .[]' | tee test_output_pretty.log
-          flutter test --reporter=expanded --coverage
-        continue-on-error: true
+      - name: Run Tests with Coverage
+        run: flutter test --coverage
 
-      - name: Convert Test Results to JUnit (if needed)
+      - name: Convert Test Results to JUnit
         run: |
           dart pub global activate junitreport
+          flutter test --machine > test_output.log
           cat test_output.log | dart pub global run junitreport:machine > report.xml
 
       - name: Upload JUnit Test Report
