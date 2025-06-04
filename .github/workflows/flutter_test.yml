@@ -7,37 +7,34 @@ on:
       - main
 
 jobs:
-  test:
+  flutter-tests:
     name: Run Flutter Tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Flutter
+      - name: Install Flutter (master channel for Dart 3.5.3)
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0' # 🔧 use exact version to avoid 'stable' issues
-          channel: 'stable'         # optional but clearer
+          channel: master
 
-      - name: Flutter Version
+      - name: Confirm Flutter Version
         run: flutter --version
 
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Run Tests with Coverage
-        run: flutter test --coverage
+      - name: Run Widget and Unit Tests
+        run: flutter test --no-pub
 
-      - name: Convert Test Results to JUnit
-        run: |
-          dart pub global activate junitreport
-          flutter test --machine > test_output.log
-          cat test_output.log | dart pub global run junitreport:machine > report.xml
+      - name: Archive Raw Test Output (Optional for PR Review or Jira Links)
+        if: always()
+        run: flutter test > flutter_test_output.txt || true
 
-      - name: Upload JUnit Test Report
+      - name: Upload Test Output (Optional)
         uses: actions/upload-artifact@v4
         with:
-          name: flutter-test-report
-          path: report.xml
+          name: flutter-test-output
+          path: flutter_test_output.txt
