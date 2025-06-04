@@ -11,17 +11,14 @@ class CurvedIconBackground extends CustomClipper<Path> {
     final double height = size.height * 0.92;
 
     path.lineTo(0, height);
-    double x = 0.0;
-    final int numberOfWaves = 2;
-    final double increment = size.width / numberOfWaves;
+    final double increment = size.width / 2;
 
-    path.lineTo(x, 0);
-    path.cubicTo(20.0, 0, 20.0, height, 40.0, height);
+    path.lineTo(0, 0);
+    path.cubicTo(increment / 2, 0, increment / 2, height, increment, height);
 
-    x += increment;
-
-    path.lineTo(x, height);
-    path.cubicTo(60.0, height, 60.0, 0, 80.0, 0);
+    path.lineTo(increment, height);
+    path.cubicTo(increment + increment / 2, height, increment + increment / 2,
+        0, increment * 2, 0);
 
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
@@ -73,7 +70,7 @@ class DefaultNavBar extends ConsumerWidget {
                           child: ClipPath(
                             clipper: CurvedIconBackground(),
                             child: Container(
-                              width: 80,
+                              width: MediaQuery.sizeOf(context).width / 3,
                               height: 60,
                               color: Colors.white,
                             ),
@@ -84,6 +81,7 @@ class DefaultNavBar extends ConsumerWidget {
                   },
                 ),
                 Icon(icon,
+                    size: 32,
                     color: isSelected ? Colors.black54 : Colors.white,
                     semanticLabel: label)
               ],
