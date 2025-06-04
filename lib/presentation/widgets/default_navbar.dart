@@ -1,26 +1,22 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/providers/navigation_provider.dart";
-
-import "../../application/state/navigation_controller.dart";
+import "package:propinquity/application/state/navigation_controller.dart";
 
 class CurvedIconBackground extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    final path = Path();
+    final Path path = Path();
 
     final double height = size.height * 0.92;
 
     path.lineTo(0, height);
     double x = 0.0;
-    final numberOfWaves = 2;
-    var increment = size.width / numberOfWaves;
+    final int numberOfWaves = 2;
+    final double increment = size.width / numberOfWaves;
 
     path.lineTo(x, 0);
     path.cubicTo(20.0, 0, 20.0, height, 40.0, height);
-
-    print(
-        "Numbers: ${0 + increment / 2}, ${x + increment / 2}, ${x + increment}");
 
     x += increment;
 
@@ -46,14 +42,11 @@ class DefaultNavBar extends ConsumerWidget {
   const DefaultNavBar({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPage = ref.watch(navigationProvider);
-    final nav = ref.read(navigationProvider.notifier);
-    void onTapped(int index) {
-      ref.read(currentTabProvider.notifier).state = index;
-    }
+    final AppPage currentPage = ref.watch(navigationProvider);
+    final NavigationController nav = ref.read(navigationProvider.notifier);
 
     Widget buildTap(AppPage page, IconData icon, String label) {
-      final isSelected = currentPage == page;
+      final bool isSelected = currentPage == page;
 
       return GestureDetector(
         onTap: () => nav.goTo(page),
@@ -103,7 +96,12 @@ class DefaultNavBar extends ConsumerWidget {
     return Container(
       height: 60,
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(color: Color.fromRGBO(234, 43, 121, 1)),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(colors: <Color>[
+          Color.fromRGBO(234, 43, 121, 1),
+          Color.fromRGBO(234, 54, 128, 1)
+        ]),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
