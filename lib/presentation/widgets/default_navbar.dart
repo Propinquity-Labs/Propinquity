@@ -9,21 +9,23 @@ class CurvedIconBackground extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
 
-    path.lineTo(0, size.height);
-    var x = 0.0;
-    var numberOfWaves = 2;
+    final double height = size.height * 0.92;
+
+    path.lineTo(0, height);
+    double x = 0.0;
+    final numberOfWaves = 2;
     var increment = size.width / numberOfWaves;
-    bool startFromTop = true;
 
     path.lineTo(x, 0);
-    path.cubicTo(x + increment / 2, 0, x + increment / 2, size.height,
-        x + increment, size.height);
+    path.cubicTo(20.0, 0, 20.0, height, 40.0, height);
+
+    print(
+        "Numbers: ${0 + increment / 2}, ${x + increment / 2}, ${x + increment}");
 
     x += increment;
 
-    path.lineTo(x, size.height);
-    path.cubicTo(
-        x + increment / 2, size.height, x + increment / 2, 0, x + increment, 0);
+    path.lineTo(x, height);
+    path.cubicTo(60.0, height, 60.0, 0, 80.0, 0);
 
     path.lineTo(size.width, 0);
     path.lineTo(0, 0);
@@ -61,20 +63,32 @@ class DefaultNavBar extends ConsumerWidget {
             Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                AnimatedContainer(
-                  width: isSelected ? 100 : 0,
-                  height: isSelected ? 60 : 0,
-                  curve: Curves.easeOut,
-                  duration: const Duration(milliseconds: 300),
-                  child: Transform.translate(
-                    offset: const Offset(0, -1),
-                    child: ClipPath(
-                      clipper: CurvedIconBackground(),
-                      child: Container(
-                        color: Colors.white,
-                      ),
-                    ),
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(
+                    begin: isSelected ? 1.0 : 0,
+                    end: isSelected ? 1.0 : 0,
                   ),
+                  duration: const Duration(milliseconds: 300),
+                  builder: (BuildContext context, double scale, Widget? child) {
+                    return AnimatedSlide(
+                      offset: isSelected ? Offset.zero : const Offset(0, -1),
+                      duration: const Duration(milliseconds: 300),
+                      child: Transform.scale(
+                        scale: scale,
+                        child: Transform.translate(
+                          offset: const Offset(0, -1),
+                          child: ClipPath(
+                            clipper: CurvedIconBackground(),
+                            child: Container(
+                              width: 80,
+                              height: 60,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 Icon(icon,
                     color: isSelected ? Colors.black54 : Colors.white,
@@ -88,7 +102,7 @@ class DefaultNavBar extends ConsumerWidget {
 
     return Container(
       height: 60,
-      clipBehavior: Clip.none,
+      clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(color: Color.fromRGBO(234, 43, 121, 1)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
