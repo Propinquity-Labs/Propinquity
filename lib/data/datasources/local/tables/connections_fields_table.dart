@@ -9,4 +9,10 @@ class ConnectionsFieldsTable extends Table {
   Column<String> get fieldType => text().named("field_type")();
   Column<String> get fieldValue => text().named("field_value")();
   Column<DateTime> get deletedAt => dateTime().nullable().named("deleted_at")();
+  IntColumn get fieldOrder => integer().named("field_order")();
+
+  @override
+  List<Set<Column>> get uniqueKeys => <Set<Column<Object>>>[
+        <Column<Object>>{connectionsId, fieldOrder},
+      ];
 }

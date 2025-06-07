@@ -6,7 +6,8 @@ import "package:propinquity/data/datasources/local/tables/dates_table.dart";
 
 part "drift_database.g.dart";
 
-@DriftDatabase(tables: [ConnectionsTable, DatesTable, ConnectionsFieldsTable])
+@DriftDatabase(
+    tables: <Type>[ConnectionsTable, DatesTable, ConnectionsFieldsTable])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
