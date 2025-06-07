@@ -1,17 +1,28 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
-import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/application/providers/connections_provider.dart";
 import "package:propinquity/presentation/screens/main_screen.dart";
 
 void main() async {
-  final AppDatabase db = AppDatabase();
+  WidgetsFlutterBinding
+      .ensureInitialized(); // required for async + Flutter bindings
+
   const bool shouldSeedTestData = true;
 
+  // Create a pre-run Riverpod container
+  final container = ProviderContainer();
+
   if (shouldSeedTestData) {
-    await db.connectionsDAO.insertExampleData();
+    final dao = container.read(connectionsDaoProvider);
+    await dao.insertExampleData(); // ✅ calls your DAO method directly
   }
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {
