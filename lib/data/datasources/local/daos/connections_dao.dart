@@ -24,6 +24,9 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
         ..where(($ConnectionsTableTable tbl) => tbl.connectionsId.equals(id)))
       .go();
 
+  Stream<List<ConnectionsTableData>> watchAllConnections() =>
+      select(connectionsTable).watch();
+
   Future<void> updateConnectionsWithFields(
       ConnectionsTableCompanion connectionsEntity,
       List<ConnectionsFieldsTableCompanion> fieldsEntityList,
