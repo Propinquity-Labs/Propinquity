@@ -12,6 +12,6 @@ class ConnectionsTable extends Table {
   IntColumn get calculatedScore =>
       integer().nullable().named("calculated_score")();
   Column<bool> get checkIn =>
-      boolean().named("check_in").withDefault(false as Expression<bool>)();
+      boolean().named("check_in").withDefault(const Constant<bool>(false))();
   Column<DateTime> get deletedAt => dateTime().nullable().named("deleted_at")();
 }

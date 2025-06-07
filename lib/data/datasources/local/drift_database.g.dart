@@ -64,7 +64,7 @@ class $ConnectionsTableTable extends ConnectionsTable
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('CHECK ("check_in" IN (0, 1))'),
-      defaultValue: false as Expression<bool>);
+      defaultValue: const Constant<bool>(false));
   static const VerificationMeta _deletedAtMeta =
       const VerificationMeta('deletedAt');
   @override
@@ -1110,7 +1110,10 @@ class $ConnectionsFieldsTableTable extends ConnectionsFieldsTable
   @override
   late final GeneratedColumn<int> connectionsId = GeneratedColumn<int>(
       'connections_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES connections_table (connections_id) ON DELETE CASCADE'));
   static const VerificationMeta _fieldTypeMeta =
       const VerificationMeta('fieldType');
   @override
@@ -1474,6 +1477,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
               TableUpdate('dates_table', kind: UpdateKind.delete),
             ],
           ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('connections_table',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('connections_fields_table', kind: UpdateKind.delete),
+            ],
+          ),
         ],
       );
 }
@@ -1519,6 +1529,25 @@ final class $$ConnectionsTableTableReferences extends BaseReferences<
         .filter((f) => f.connectionsId.connectionsId($_item.connectionsId));
 
     final cache = $_typedResult.readTableOrNull(_datesTableRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$ConnectionsFieldsTableTable,
+      List<ConnectionsFieldsTableData>> _connectionsFieldsTableRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.connectionsFieldsTable,
+          aliasName: $_aliasNameGenerator(db.connectionsTable.connectionsId,
+              db.connectionsFieldsTable.connectionsId));
+
+  $$ConnectionsFieldsTableTableProcessedTableManager
+      get connectionsFieldsTableRefs {
+    final manager = $$ConnectionsFieldsTableTableTableManager(
+            $_db, $_db.connectionsFieldsTable)
+        .filter((f) => f.connectionsId.connectionsId($_item.connectionsId));
+
+    final cache =
+        $_typedResult.readTableOrNull(_connectionsFieldsTableRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -1582,6 +1611,29 @@ class $$ConnectionsTableTableFilterComposer
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+    return f(composer);
+  }
+
+  Expression<bool> connectionsFieldsTableRefs(
+      Expression<bool> Function($$ConnectionsFieldsTableTableFilterComposer f)
+          f) {
+    final $$ConnectionsFieldsTableTableFilterComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.connectionsId,
+            referencedTable: $db.connectionsFieldsTable,
+            getReferencedColumn: (t) => t.connectionsId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ConnectionsFieldsTableTableFilterComposer(
+                  $db: $db,
+                  $table: $db.connectionsFieldsTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
     return f(composer);
   }
 }
@@ -1684,6 +1736,29 @@ class $$ConnectionsTableTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> connectionsFieldsTableRefs<T extends Object>(
+      Expression<T> Function($$ConnectionsFieldsTableTableAnnotationComposer a)
+          f) {
+    final $$ConnectionsFieldsTableTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.connectionsId,
+            referencedTable: $db.connectionsFieldsTable,
+            getReferencedColumn: (t) => t.connectionsId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ConnectionsFieldsTableTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.connectionsFieldsTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$ConnectionsTableTableTableManager extends RootTableManager<
@@ -1697,7 +1772,8 @@ class $$ConnectionsTableTableTableManager extends RootTableManager<
     $$ConnectionsTableTableUpdateCompanionBuilder,
     (ConnectionsTableData, $$ConnectionsTableTableReferences),
     ConnectionsTableData,
-    PrefetchHooks Function({bool datesTableRefs})> {
+    PrefetchHooks Function(
+        {bool datesTableRefs, bool connectionsFieldsTableRefs})> {
   $$ConnectionsTableTableTableManager(
       _$AppDatabase db, $ConnectionsTableTable table)
       : super(TableManagerState(
@@ -1759,10 +1835,14 @@ class $$ConnectionsTableTableTableManager extends RootTableManager<
                     $$ConnectionsTableTableReferences(db, table, e)
                   ))
               .toList(),
-          prefetchHooksCallback: ({datesTableRefs = false}) {
+          prefetchHooksCallback: (
+              {datesTableRefs = false, connectionsFieldsTableRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (datesTableRefs) db.datesTable],
+              explicitlyWatchedTables: [
+                if (datesTableRefs) db.datesTable,
+                if (connectionsFieldsTableRefs) db.connectionsFieldsTable
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
@@ -1774,6 +1854,18 @@ class $$ConnectionsTableTableTableManager extends RootTableManager<
                         managerFromTypedResult: (p0) =>
                             $$ConnectionsTableTableReferences(db, table, p0)
                                 .datesTableRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems.where(
+                                (e) => e.connectionsId == item.connectionsId),
+                        typedResults: items),
+                  if (connectionsFieldsTableRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$ConnectionsTableTableReferences
+                            ._connectionsFieldsTableRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ConnectionsTableTableReferences(db, table, p0)
+                                .connectionsFieldsTableRefs,
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems.where(
                                 (e) => e.connectionsId == item.connectionsId),
@@ -1796,7 +1888,8 @@ typedef $$ConnectionsTableTableProcessedTableManager = ProcessedTableManager<
     $$ConnectionsTableTableUpdateCompanionBuilder,
     (ConnectionsTableData, $$ConnectionsTableTableReferences),
     ConnectionsTableData,
-    PrefetchHooks Function({bool datesTableRefs})>;
+    PrefetchHooks Function(
+        {bool datesTableRefs, bool connectionsFieldsTableRefs})>;
 typedef $$DatesTableTableCreateCompanionBuilder = DatesTableCompanion Function({
   Value<int> uid,
   required int connectionsId,
@@ -2189,6 +2282,27 @@ typedef $$ConnectionsFieldsTableTableUpdateCompanionBuilder
   Value<int> fieldOrder,
 });
 
+final class $$ConnectionsFieldsTableTableReferences extends BaseReferences<
+    _$AppDatabase, $ConnectionsFieldsTableTable, ConnectionsFieldsTableData> {
+  $$ConnectionsFieldsTableTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $ConnectionsTableTable _connectionsIdTable(_$AppDatabase db) =>
+      db.connectionsTable.createAlias($_aliasNameGenerator(
+          db.connectionsFieldsTable.connectionsId,
+          db.connectionsTable.connectionsId));
+
+  $$ConnectionsTableTableProcessedTableManager get connectionsId {
+    final manager =
+        $$ConnectionsTableTableTableManager($_db, $_db.connectionsTable)
+            .filter((f) => f.connectionsId($_item.connectionsId));
+    final item = $_typedResult.readTableOrNull(_connectionsIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
 class $$ConnectionsFieldsTableTableFilterComposer
     extends Composer<_$AppDatabase, $ConnectionsFieldsTableTable> {
   $$ConnectionsFieldsTableTableFilterComposer({
@@ -2201,9 +2315,6 @@ class $$ConnectionsFieldsTableTableFilterComposer
   ColumnFilters<int> get fieldId => $composableBuilder(
       column: $table.fieldId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get connectionsId => $composableBuilder(
-      column: $table.connectionsId, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<String> get fieldType => $composableBuilder(
       column: $table.fieldType, builder: (column) => ColumnFilters(column));
 
@@ -2215,6 +2326,26 @@ class $$ConnectionsFieldsTableTableFilterComposer
 
   ColumnFilters<int> get fieldOrder => $composableBuilder(
       column: $table.fieldOrder, builder: (column) => ColumnFilters(column));
+
+  $$ConnectionsTableTableFilterComposer get connectionsId {
+    final $$ConnectionsTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.connectionsId,
+        referencedTable: $db.connectionsTable,
+        getReferencedColumn: (t) => t.connectionsId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ConnectionsTableTableFilterComposer(
+              $db: $db,
+              $table: $db.connectionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$ConnectionsFieldsTableTableOrderingComposer
@@ -2229,10 +2360,6 @@ class $$ConnectionsFieldsTableTableOrderingComposer
   ColumnOrderings<int> get fieldId => $composableBuilder(
       column: $table.fieldId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get connectionsId => $composableBuilder(
-      column: $table.connectionsId,
-      builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get fieldType => $composableBuilder(
       column: $table.fieldType, builder: (column) => ColumnOrderings(column));
 
@@ -2244,6 +2371,26 @@ class $$ConnectionsFieldsTableTableOrderingComposer
 
   ColumnOrderings<int> get fieldOrder => $composableBuilder(
       column: $table.fieldOrder, builder: (column) => ColumnOrderings(column));
+
+  $$ConnectionsTableTableOrderingComposer get connectionsId {
+    final $$ConnectionsTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.connectionsId,
+        referencedTable: $db.connectionsTable,
+        getReferencedColumn: (t) => t.connectionsId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ConnectionsTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.connectionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$ConnectionsFieldsTableTableAnnotationComposer
@@ -2258,9 +2405,6 @@ class $$ConnectionsFieldsTableTableAnnotationComposer
   GeneratedColumn<int> get fieldId =>
       $composableBuilder(column: $table.fieldId, builder: (column) => column);
 
-  GeneratedColumn<int> get connectionsId => $composableBuilder(
-      column: $table.connectionsId, builder: (column) => column);
-
   GeneratedColumn<String> get fieldType =>
       $composableBuilder(column: $table.fieldType, builder: (column) => column);
 
@@ -2272,6 +2416,26 @@ class $$ConnectionsFieldsTableTableAnnotationComposer
 
   GeneratedColumn<int> get fieldOrder => $composableBuilder(
       column: $table.fieldOrder, builder: (column) => column);
+
+  $$ConnectionsTableTableAnnotationComposer get connectionsId {
+    final $$ConnectionsTableTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.connectionsId,
+        referencedTable: $db.connectionsTable,
+        getReferencedColumn: (t) => t.connectionsId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ConnectionsTableTableAnnotationComposer(
+              $db: $db,
+              $table: $db.connectionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$ConnectionsFieldsTableTableTableManager extends RootTableManager<
@@ -2283,13 +2447,9 @@ class $$ConnectionsFieldsTableTableTableManager extends RootTableManager<
     $$ConnectionsFieldsTableTableAnnotationComposer,
     $$ConnectionsFieldsTableTableCreateCompanionBuilder,
     $$ConnectionsFieldsTableTableUpdateCompanionBuilder,
-    (
-      ConnectionsFieldsTableData,
-      BaseReferences<_$AppDatabase, $ConnectionsFieldsTableTable,
-          ConnectionsFieldsTableData>
-    ),
+    (ConnectionsFieldsTableData, $$ConnectionsFieldsTableTableReferences),
     ConnectionsFieldsTableData,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool connectionsId})> {
   $$ConnectionsFieldsTableTableTableManager(
       _$AppDatabase db, $ConnectionsFieldsTableTable table)
       : super(TableManagerState(
@@ -2337,9 +2497,47 @@ class $$ConnectionsFieldsTableTableTableManager extends RootTableManager<
             fieldOrder: fieldOrder,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$ConnectionsFieldsTableTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({connectionsId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (connectionsId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.connectionsId,
+                    referencedTable: $$ConnectionsFieldsTableTableReferences
+                        ._connectionsIdTable(db),
+                    referencedColumn: $$ConnectionsFieldsTableTableReferences
+                        ._connectionsIdTable(db)
+                        .connectionsId,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
@@ -2353,13 +2551,9 @@ typedef $$ConnectionsFieldsTableTableProcessedTableManager
         $$ConnectionsFieldsTableTableAnnotationComposer,
         $$ConnectionsFieldsTableTableCreateCompanionBuilder,
         $$ConnectionsFieldsTableTableUpdateCompanionBuilder,
-        (
-          ConnectionsFieldsTableData,
-          BaseReferences<_$AppDatabase, $ConnectionsFieldsTableTable,
-              ConnectionsFieldsTableData>
-        ),
+        (ConnectionsFieldsTableData, $$ConnectionsFieldsTableTableReferences),
         ConnectionsFieldsTableData,
-        PrefetchHooks Function()>;
+        PrefetchHooks Function({bool connectionsId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
