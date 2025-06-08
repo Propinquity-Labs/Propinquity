@@ -15,7 +15,7 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const ProviderScope(child: MyApp()));
 
-    expect(find.text("Home"), findsOneWidget);
+    expect(find.text("Hi, how's it going!"), findsOneWidget);
   });
 
   testWidgets("Tests navigating through navbar", (WidgetTester tester) async {
@@ -24,7 +24,7 @@ void main() {
 
     expect(find.text("Hi, how's it going!"), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.add_rounded));
+    await tester.tap(find.byIcon(Icons.add_circle_outline_rounded));
     await tester.pump();
 
     expect(find.text("Add a Connection"), findsOneWidget);

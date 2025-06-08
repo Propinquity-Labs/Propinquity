@@ -23,6 +23,18 @@ jobs:
       - name: Confirm Flutter Version
         run: flutter --version
 
+      - name: Cache Flutter Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+            .packages
+            pubspec.lock
+          key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
       - name: Install Dependencies
         run: flutter pub get
 

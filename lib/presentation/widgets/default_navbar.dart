@@ -111,7 +111,7 @@ class DefaultNavBar extends ConsumerWidget {
           buildTap(AppPage.home, Icons.home_rounded, "Home"),
           buildTap(
               AppPage.addConnection, Icons.add_circle_outline_rounded, "Add"),
-          buildTap(AppPage.settings, Icons.settings, "Settings")
+          buildTap(AppPage.settings, Icons.settings_rounded, "Settings")
         ],
       ),
     );
