@@ -72,7 +72,7 @@ class DefaultNavBar extends ConsumerWidget {
                             child: Container(
                               width: MediaQuery.sizeOf(context).width / 3,
                               height: 60,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
@@ -82,7 +82,9 @@ class DefaultNavBar extends ConsumerWidget {
                 ),
                 Icon(icon,
                     size: 32,
-                    color: isSelected ? Colors.black54 : Colors.white,
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSecondary,
                     semanticLabel: label)
               ],
             ),
@@ -94,11 +96,14 @@ class DefaultNavBar extends ConsumerWidget {
     return Container(
       height: 60,
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: <Color>[
-          Color.fromRGBO(234, 43, 121, 1),
-          Color.fromRGBO(234, 54, 128, 1)
-        ]),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: <Color>[
+              Theme.of(context).colorScheme.secondary,
+              const Color.fromRGBO(255, 70, 150, 1.0)
+            ]),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

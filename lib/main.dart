@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
 import "package:propinquity/presentation/screens/main_screen.dart";
+import "package:propinquity/presentation/themes.dart";
 
 void main() async {
   WidgetsFlutterBinding
@@ -32,10 +33,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: "Propinquity",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: defaultTheme,
       home: const MainScreen(),
     );
   }
