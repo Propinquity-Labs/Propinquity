@@ -72,7 +72,7 @@ class DefaultNavBar extends ConsumerWidget {
                             child: Container(
                               width: MediaQuery.sizeOf(context).width / 3,
                               height: 60,
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.surface,
                             ),
                           ),
                         ),
@@ -83,7 +83,7 @@ class DefaultNavBar extends ConsumerWidget {
                 Icon(icon,
                     size: 32,
                     color: isSelected
-                        ? Theme.of(context).colorScheme.onPrimary
+                        ? Theme.of(context).colorScheme.onSurface
                         : Theme.of(context).colorScheme.onSecondary,
                     semanticLabel: label)
               ],
@@ -101,7 +101,7 @@ class DefaultNavBar extends ConsumerWidget {
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
             colors: <Color>[
-              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.primary,
               const Color.fromRGBO(255, 70, 150, 1.0)
             ]),
       ),
