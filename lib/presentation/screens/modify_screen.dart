@@ -1,5 +1,6 @@
 import "package:flutter/widgets.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:propinquity/presentation/widgets/main_layout.dart";
 
 class ModifyScreen extends ConsumerWidget {
   const ModifyScreen({super.key});
@@ -7,6 +8,11 @@ class ModifyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
-    return const Center(child: Text("Modify/add"));
+    return const MainLayout(
+        title: "Add a Connection",
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[Text("Test")],
+        ));
   }
 }

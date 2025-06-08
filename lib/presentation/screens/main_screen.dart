@@ -28,9 +28,7 @@ class MainScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      body: Center(
-        child: getPage(currentPage),
-      ),
+      body: getPage(currentPage),
       bottomNavigationBar:
           ref.read(navigationProvider.notifier).isTabPage(currentPage)
               ? const DefaultNavBar()
