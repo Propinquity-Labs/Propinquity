@@ -76,3 +76,43 @@ lib/
 
 - As a user, I want a visual representation of my streaks to feel a sense of achievement.
 
+```mermaid
+erDiagram
+    connections {
+        INT connections_id PK
+        TEXT connections_name
+        TEXT contact_frequency
+        TEXT relation
+        BLOB image
+        INT streak
+        INT calculated_score
+        BOOL check_in
+        DATETIME deleted_at
+    }
+
+    connections_fields {
+        INT connections_id FK
+        TEXT field_type
+        TEXT value
+        DATETIME deleted_at
+    }
+
+    dates {
+        INT uid PK
+        INT connections_id FK
+        TEXT title
+        DATETIME created
+        DATETIME last_modified
+        DATETIME dtstart
+        DATETIME dtend
+        DATETIME dtstamp
+        TEXT rrule
+        INT sequence
+        TEXT timezone
+        DATETIME deleted_at
+    }
+
+    connections ||--o{ connections_fields : "has many"
+    connections ||--o{ dates : "has many"
+
+```
