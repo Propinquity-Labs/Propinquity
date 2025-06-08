@@ -75,6 +75,7 @@ flutter:
   assets:
       - lib/assets/
       - lib/assets/test_images/
+      - lib/assets/fonts/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -100,6 +101,17 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+
+  fonts:
+    - family: Baloo2
+      fonts:
+        - asset: lib/assets/fonts/Baloo2.ttf
+    - family: IBMPlexSans
+      fonts:
+        - asset: lib/assets/fonts/IBMPlexSans.ttf
+        - asset: lib/assets/fonts/IBMPlexSans-Italic.ttf
+          style: italic
+
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
