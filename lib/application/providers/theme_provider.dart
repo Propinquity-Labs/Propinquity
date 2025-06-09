@@ -37,6 +37,11 @@ final ThemeData defaultTheme = ThemeData(
       fontSize: 28,
       fontWeight: FontWeight.bold,
     ),
+    displaySmall: TextStyle(
+      fontFamily: "Baloo2",
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),
     titleLarge: TextStyle(
       fontFamily: "Baloo2",
       fontSize: 22,
@@ -58,7 +63,7 @@ final ThemeData defaultTheme = ThemeData(
   ),
 );
 
-final ThemeData darkTheme = ThemeData(
+final ThemeData darkTheme = defaultTheme.copyWith(
   colorScheme: const ColorScheme(
     brightness: Brightness.dark,
     primary: Color.fromRGBO(234, 43, 121, 1),
@@ -71,35 +76,5 @@ final ThemeData darkTheme = ThemeData(
     onSurface: Color.fromRGBO(255, 255, 255, 1), // Swapped dark -> white
     tertiary: Color.fromRGBO(242, 53, 76, 1),
     onTertiary: Color.fromRGBO(250, 250, 250, 1),
-  ),
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(
-      fontFamily: "Baloo2",
-      fontSize: 32,
-      fontWeight: FontWeight.bold,
-    ),
-    displayMedium: TextStyle(
-      fontFamily: "Baloo2",
-      fontSize: 28,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      fontFamily: "Baloo2",
-      fontSize: 22,
-      fontWeight: FontWeight.w600,
-    ),
-    bodyLarge: TextStyle(
-      fontFamily: "IBMPlexSans",
-      fontSize: 16,
-    ),
-    bodyMedium: TextStyle(
-      fontFamily: "IBMPlexSans",
-      fontSize: 14,
-    ),
-    labelLarge: TextStyle(
-      fontFamily: "IBMPlexSans",
-      fontSize: 12,
-      fontStyle: FontStyle.italic,
-    ),
   ),
 );
