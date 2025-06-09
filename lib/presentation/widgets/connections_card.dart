@@ -19,63 +19,88 @@ class ConnectionsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Flexible(
-        child: Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: LinearGradient(colors: [
-            Theme.of(context).colorScheme.secondary,
-            const Color.fromRGBO(243, 92, 110, 1.0)
-          ], begin: Alignment.bottomCenter, end: Alignment.topCenter)),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-            child: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: GestureDetector(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("MAYDAY"),
+                    actions: [
+                      TextButton(
+                        child: const Text('Confirm'),
+                        onPressed: () {
+                          // Do your action here
+                          Navigator.of(context).pop(); // dismiss dialog
+                        },
+                      ),
+                    ],
+                  );
+                });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).colorScheme.secondary,
+                  const Color.fromRGBO(243, 92, 110, 1.0)
+                ], begin: Alignment.bottomCenter, end: Alignment.topCenter)),
+            child: Row(
               children: [
-                image != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.memory(
-                          width: 60,
-                          height: 60,
-                          image!,
-                        ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Column(
+                    children: [
+                      image != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.memory(
+                                width: 60,
+                                height: 60,
+                                image!,
+                              ),
+                            )
+                          : const SizedBox()
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall
+                            ?.copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary),
+                      ),
+                      Text(
+                        "Contacted $frequency",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSecondary),
+                      ),
+                      Text(
+                        relation,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSecondary),
                       )
-                    : const SizedBox()
+                    ],
+                  ),
+                ),
+                const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
+                    child: Column(
+                      children: [Text("")],
+                    ))
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary),
-                ),
-                Text(
-                  "Contacted $frequency",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary),
-                ),
-                Text(
-                  relation,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSecondary),
-                )
-              ],
-            ),
-          ),
-          const Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
-              child: Column(
-                children: [Text("")],
-              ))
-        ],
-      ),
-    ));
+          )),
+    );
   }
 }

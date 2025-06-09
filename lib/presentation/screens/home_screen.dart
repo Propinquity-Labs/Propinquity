@@ -1,13 +1,14 @@
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:propinquity/application/providers/connections_provider.dart";
+import "package:propinquity/data/datasources/local/drift_database.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
-final testImageProvider = FutureProvider<Uint8List>((ref) async {
-  final data =
-      await rootBundle.load("lib/assets/test_images/test_1_shrimp.png");
-  return data.buffer.asUint8List();
+final connectionsListProvider =
+    FutureProvider<List<ConnectionsTableData>>((ref) async {
+  final dao = ref.watch(connectionsDaoProvider);
+  return dao.getAllConnections();
 });
 
 class HomeScreen extends ConsumerWidget {
@@ -16,37 +17,49 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO remove
-    final testImageAsync = ref.watch(testImageProvider);
+
+    final connectionsAsync = ref.watch(connectionsListProvider);
 
     // TODO: implement build
     return MainLayout(
-        title: "Hi, how's it going!",
-        body: Column(children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Text(
-                  "Now’s a great time to reconnect with a  friend you’ve not talked to in a while! If you don’t know where to start, read more about some suggestions here!",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface),
-                ),
-              )
-            ],
+      title: "Hi, how's it going!",
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Now’s a great time to reconnect with a friend you’ve not talked to in a while! If you don’t know where to start, read more about some suggestions here!",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+            ),
           ),
-          Row(
-            children: <Widget>[
-              testImageAsync.when(
-                  data: (Uint8List image) => ConnectionsCard(
-                        name: "Harry Ron Franks",
-                        frequency: "Weekly",
-                        relation: "Acquaintance",
-                        image: image,
-                        score: null,
-                      ),
-                  error: (err, stack) => Text("Error loading image: $err"),
-                  loading: () => const CircularProgressIndicator())
-            ],
-          )
-        ]));
+          Padding(
+            padding: EdgeInsets.all(2),
+            child: connectionsAsync.when(
+              data: (connections) {
+                if (connections.isEmpty) {
+                  return const Center(child: Text("Nothing Found"));
+                }
+                return Column(
+                    children: connections
+                        .map((contact) => ConnectionsCard(
+                              name: contact.connectionsName,
+                              frequency: contact.contactFrequency,
+                              relation: contact.connectionsRelation,
+                              image: contact.image,
+                              score: contact.calculatedScore,
+                            ))
+                        .toList());
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) =>
+                  Center(child: Text('Error: $error')),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
