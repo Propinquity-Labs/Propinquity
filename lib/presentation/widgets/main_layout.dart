@@ -9,6 +9,7 @@ class MainLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       // <-- Better to wrap the layout in a Scaffold if you're not already
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 60),
@@ -21,7 +22,8 @@ class MainLayout extends ConsumerWidget {
                 children: <Widget>[
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ],
               ),

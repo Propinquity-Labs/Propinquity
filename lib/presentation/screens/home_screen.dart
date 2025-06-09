@@ -15,6 +15,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // TODO remove
     final testImageAsync = ref.watch(testImageProvider);
 
     // TODO: implement build
@@ -26,7 +27,8 @@ class HomeScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   "Now’s a great time to reconnect with a  friend you’ve not talked to in a while! If you don’t know where to start, read more about some suggestions here!",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               )
             ],
