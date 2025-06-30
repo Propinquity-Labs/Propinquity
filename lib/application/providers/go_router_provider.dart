@@ -1,25 +1,55 @@
-import "package:flutter/widgets.dart";
+import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/authentication_provider.dart";
-import "package:propinquity/application/state/navigation_controller.dart";
-import "package:propinquity/presentation/screens/main_screen.dart";
+import "package:propinquity/presentation/screens/home_screen.dart";
+import "package:propinquity/presentation/screens/modify_screen.dart";
 import "package:propinquity/presentation/screens/settings_screen.dart";
+
+import "../../presentation/widgets/default_navbar.dart";
+
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final Provider<GoRouter> goRouterProvider =
     Provider<GoRouter>((Ref<GoRouter> ref) {
   final bool isLoggedIn = ref.watch(authProvider);
+
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: "/",
     routes: <RouteBase>[
-      GoRoute(
-          path: "/", builder: (_, __) => const MainScreen(page: AppPage.home)),
-      GoRoute(
-          path: "/add",
-          builder: (_, __) => const MainScreen(page: AppPage.addConnection)),
-      GoRoute(
-          path: "/settings",
-          builder: (_, __) => const MainScreen(page: AppPage.settings)),
+      ShellRoute(
+          builder: (BuildContext context, GoRouterState state, Widget child) {
+            return Scaffold(
+                body: child, bottomNavigationBar: const DefaultNavBar());
+          },
+          routes: <RouteBase>[
+            GoRoute(
+              path: "/",
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return CustomTransitionPage(
+                    child: const HomeScreen(),
+                    transitionsBuilder: (_, __, ___, Widget child) => child);
+              },
+            ),
+            GoRoute(
+              path: "/add",
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return CustomTransitionPage(
+                    child: const ModifyScreen(),
+                    transitionsBuilder: (_, __, ___, Widget child) => child);
+                ;
+              },
+            ),
+            GoRoute(
+              path: "/settings",
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return CustomTransitionPage(
+                    child: const SettingsScreen(),
+                    transitionsBuilder: (_, __, ___, Widget child) => child);
+              },
+            )
+          ]),
       GoRoute(path: "/login", builder: (_, __) => const SettingsScreen()),
     ],
     redirect: (BuildContext context, GoRouterState state) {

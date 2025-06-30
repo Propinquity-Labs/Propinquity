@@ -7,7 +7,22 @@ class NavigationController extends StateNotifier<AppPage> {
   final GoRouter _router;
   NavigationController(this._router) : super(AppPage.home);
 
-  void goTo(AppPage page) => state = page;
+  void goTo(AppPage page) {
+    switch (page) {
+      case AppPage.home:
+        _router.go("/");
+        break;
+      case AppPage.addConnection:
+        _router.go("/add");
+        break;
+      case AppPage.settings:
+        _router.go("/settings");
+        break;
+      case AppPage.none:
+        break;
+    }
+    state = page;
+  }
 
   bool isTabPage(AppPage page) {
     return page == AppPage.home ||
