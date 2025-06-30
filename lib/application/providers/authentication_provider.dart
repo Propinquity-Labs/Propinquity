@@ -1,3 +1,3 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final authProvider = StateProvider<bool>((ref) => false);
+final authProvider = StateProvider<bool>((ref) => true);

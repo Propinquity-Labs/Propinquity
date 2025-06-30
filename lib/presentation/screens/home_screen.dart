@@ -50,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
                               relation: contact.connectionsRelation,
                               image: contact.image,
                               score: contact.calculatedScore,
-                              onTap: () {Navigator.push(context, route)},
+                              onTap: () {},
                             ))
                         .toList());
               },

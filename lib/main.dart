@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
+import "package:propinquity/application/providers/go_router_provider.dart";
 import "package:propinquity/application/providers/theme_provider.dart";
-import "package:propinquity/presentation/screens/main_screen.dart";
 
 void main() async {
   WidgetsFlutterBinding
@@ -31,10 +31,11 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+    final router = ref.watch(goRouterProvider);
+    return MaterialApp.router(
       title: "Propinquity",
       theme: ref.watch(themeProvider),
-      home: const MainScreen(),
+      routerConfig: router,
     );
   }
 }
