@@ -10,36 +10,21 @@ class ConnectionsCard extends ConsumerWidget {
       required this.frequency,
       required this.relation,
       required this.image,
-      required this.score});
+      required this.score,
+      required this.onTap});
   final String name;
   final String frequency;
   final String relation;
   final Uint8List? image;
   final int? score;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: GestureDetector(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text("MAYDAY"),
-                    actions: [
-                      TextButton(
-                        child: const Text('Confirm'),
-                        onPressed: () {
-                          // Do your action here
-                          Navigator.of(context).pop(); // dismiss dialog
-                        },
-                      ),
-                    ],
-                  );
-                });
-          },
+          onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
