@@ -2,9 +2,14 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 class MainLayout extends ConsumerWidget {
-  const MainLayout({super.key, required this.title, required this.body});
+  const MainLayout(
+      {super.key,
+      required this.title,
+      required this.body,
+      this.canPop = false});
   final String title;
   final Widget body;
+  final bool canPop;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

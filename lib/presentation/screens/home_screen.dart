@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
+import "package:propinquity/application/providers/go_router_provider.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
@@ -19,16 +21,16 @@ class HomeScreen extends ConsumerWidget {
     // TODO remove
 
     final connectionsAsync = ref.watch(connectionsListProvider);
+    final router = ref.watch(goRouterProvider);
 
-    // TODO: implement build
     return MainLayout(
       title: "Hi, how's it going!",
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
-              "Now’s a great time to reconnect with a friend you’ve not talked to in a while! If you don’t know where to start, read more about some suggestions here!",
+              "Now’s a great time to reconnect with someone you’ve not talked to in a while!",
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
@@ -36,27 +38,30 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(2),
+            padding: const EdgeInsets.all(2),
             child: connectionsAsync.when(
-              data: (connections) {
+              data: (List<ConnectionsTableData> connections) {
                 if (connections.isEmpty) {
                   return const Center(child: Text("Nothing Found"));
                 }
                 return Column(
                     children: connections
-                        .map((contact) => ConnectionsCard(
+                        .map((ConnectionsTableData contact) => ConnectionsCard(
                               name: contact.connectionsName,
                               frequency: contact.contactFrequency,
                               relation: contact.connectionsRelation,
                               image: contact.image,
                               score: contact.calculatedScore,
-                              onTap: () {},
+                              onTap: () {
+                                context.push(
+                                    "/contact?id=${contact.connectionsId}");
+                              },
                             ))
                         .toList());
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) =>
-                  Center(child: Text('Error: $error')),
+              error: (Object error, StackTrace stackTrace) =>
+                  Center(child: Text("Error: $error")),
             ),
           ),
         ],

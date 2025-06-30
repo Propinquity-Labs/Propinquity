@@ -5,6 +5,7 @@ import "package:propinquity/application/providers/authentication_provider.dart";
 import "package:propinquity/presentation/screens/home_screen.dart";
 import "package:propinquity/presentation/screens/modify_screen.dart";
 import "package:propinquity/presentation/screens/settings_screen.dart";
+import "package:propinquity/presentation/widgets/main_layout.dart";
 
 import "../../presentation/widgets/default_navbar.dart";
 
@@ -48,7 +49,18 @@ final Provider<GoRouter> goRouterProvider =
                     child: const SettingsScreen(),
                     transitionsBuilder: (_, __, ___, Widget child) => child);
               },
-            )
+            ),
+            GoRoute(
+                path: "/contact",
+                builder: (BuildContext context, GoRouterState state) {
+                  return MainLayout(
+                    body: Text(
+                      "Test",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    title: "Contact",
+                  );
+                })
           ]),
       GoRoute(path: "/login", builder: (_, __) => const SettingsScreen()),
     ],
