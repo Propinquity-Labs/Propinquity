@@ -54,7 +54,8 @@ class HomeScreen extends ConsumerWidget {
                               score: contact.calculatedScore,
                               onTap: () {
                                 context.push(
-                                    "/contact?id=${contact.connectionsId}");
+                                    "/contact?id=${contact.connectionsId}",
+                                    extra: contact);
                               },
                             ))
                         .toList());

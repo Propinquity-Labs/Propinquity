@@ -2,12 +2,12 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/authentication_provider.dart";
+import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/presentation/screens/connections_screen.dart";
 import "package:propinquity/presentation/screens/home_screen.dart";
 import "package:propinquity/presentation/screens/modify_screen.dart";
 import "package:propinquity/presentation/screens/settings_screen.dart";
-import "package:propinquity/presentation/widgets/main_layout.dart";
-
-import "../../presentation/widgets/default_navbar.dart";
+import "package:propinquity/presentation/widgets/default_navbar.dart";
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -53,13 +53,9 @@ final Provider<GoRouter> goRouterProvider =
             GoRoute(
                 path: "/contact",
                 builder: (BuildContext context, GoRouterState state) {
-                  return MainLayout(
-                    body: Text(
-                      "Test",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    title: "Contact",
-                  );
+                  final ConnectionsTableData connectionsObj =
+                      state.extra! as ConnectionsTableData;
+                  return ConnectionsScreen(connectionsObj: connectionsObj);
                 })
           ]),
       GoRoute(path: "/login", builder: (_, __) => const SettingsScreen()),
