@@ -136,7 +136,7 @@ erDiagram
 
 ## 🔐 Authentication (Coming Soon)
 
-- Planned integration with `firebase_auth` or custom login.
+- Planned integration with supabase or custom login.
 - Routes protected with GoRouter redirection logic.
 
 ---
