@@ -1,80 +1,86 @@
-# Propinquity
+# 💞 Propinquity
 
-An application to help you and your friends stay close.
+**Propinquity** is a Flutter application that helps you stay meaningfully connected with the people who matter most.  
+Whether it’s friends, family, or professional contacts, Propinquity gently reminds you to reach out, track relationship strength, and celebrate milestones.
 
-## Getting Started
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter 3.22+ (uses GoRouter + Riverpod)
+- Dart 3+
+- Drift (Local SQL persistence)
+- `flutter pub get`
+
+### Project Structure
+
 ```
 lib/
-├── main.dart                     # App entry point, providers initialization
+├── main.dart                     # App entry point
 │
-├── core/                         # Shared logic
-│   ├── error/                    # Custom exceptions, failure classes
-│   └── utils/                    # Utilities, date helpers, constants
+├── core/                         # Shared logic/utilities
+│   ├── error/                    # Exceptions and failures
+│   └── utils/                    # Constants, date helpers, etc.
 │
-├── domain/                       # Business logic layer (Pure Dart)
-│   ├── entities/                 # Contact, Reminder, Score, etc.
-│   ├── repositories/             # Abstract classes
-│   └── usecases/                 # One file per use case (e.g. GetReminders)
+├── domain/                       # Clean architecture domain layer
+│   ├── entities/                 # Core types: Contact, Score, etc.
+│   ├── repositories/             # Abstract contracts
+│   └── usecases/                 # Business logic operations
 │
-├── data/                         # Data handling (models, sources, repos)
-│   ├── datasources/              # Local DB, SharedPrefs, notification logic
-│   ├── models/                   # DTOs for DB/storage
-│   └── repositories_impl/        # Concrete repository implementations
+├── data/                         # Data sources and persistence
+│   ├── datasources/              # Local DB, notifications, storage
+│   ├── models/                   # DTOs and conversions
+│   └── repositories_impl/        # Concrete implementations
 │
-├── application/                  # Providers and Riverpod logic
-│   ├── providers/                # Feature-specific providers
-│   └── state/                    # AsyncNotifiers, StateNotifiers, etc.
+├── application/                  # App logic (Riverpod)
+│   ├── providers/                # Riverpod Providers
+│   └── state/                    # Controllers, StateNotifiers
 │
-├── presentation/                 # UI Layer (Widgets, Pages)
-│   ├── widgets/                  # Reusable UI components
-│   ├── pages/                    # Screens (Home, ContactDetail, etc.)
-│   └── routes/                   # GoRouter or Navigator setup
+├── presentation/                 # UI Layer
+│   ├── pages/                    # Screens (Home, Settings, etc.)
+│   ├── widgets/                  # Custom reusable components
+│   └── routes/                   # GoRouter setup
 │
-└── l10n/, assets/, etc.          # Optional: localization, images, etc.
+└── l10n/, assets/, etc.          # Localization, icons, images
 ```
 
-## User Stories by Feature
-### 1 - Contact Frequency Reminders
+---
 
-- As a user, I want to set how often I want to contact someone, so I can maintain my relationships without forgetting.
+## 👤 User Stories by Feature
 
-- As a user, I want to receive reminders when I’m due to contact someone, so I stay consistent.
+### 🔁 1. Contact Frequency Reminders
+- “Remind me to reach out to Alice every 2 weeks.”
+- Automated nudges when it’s been a while.
 
-### 2 - Relationship Health Score
+### ❤️ 2. Relationship Health Score
+- Visual score reflects how “active” a connection is.
+- Color-coded for at-a-glance insights.
 
-- As a user, I want to see how “healthy” my connection is with someone, so I can identify who I’ve been neglecting.
+### ⏱ 3. Dynamic Reminders
+- Adjusts based on real interaction patterns.
+- Smarter reminders over time.
 
-- As a user, I want a simple color-coded score that updates based on my activity, so I can get a quick overview.
+### 🏷 4. Classify Relationships
+- Tag contacts as friends, work, or family.
+- Filter based on group types.
 
-### 3 - Dynamic Reminders
-- As a user, I want the app to learn from my behavior and adjust reminders, so they stay relevant and non-intrusive.
+### 📝 5. Record Information
+- Add personal notes about people.
+- Track birthdays and anniversaries.
 
-- As a user, I want to see when the next reminder is expected, even if it shifts.
+### ℹ️ 6. About the App
+- Onboarding for new users.
+- Transparent data and privacy handling.
 
-### 4 - Classify Relationships
+### 🔥 7. Relationship Streaks
+- Track how long you’ve been consistent.
+- Gamify communication through visual streaks.
 
-- As a user, I want to label people as friends, professional contacts, or others, so the app can give me appropriate suggestions.
+---
 
-- As a user, I want to filter my contacts by type, so I can focus on specific groups.
-
-### 5 - Record Information
-- As a user, I want to save notes about past conversations, so I can reference them later.
-
-- As a user, I want to record birthdays and other important dates, so I can reach out meaningfully.
-
-- As a user, I want to get notified before these important dates.
-
-### 6 - About the App
-
-- As a new user, I want to understand what the app does and how it benefits me, so I can decide to commit to using it.
-
-- As a user, I want transparency about how the app handles my data and decisions.
-
-### 7 - Relationship Streaks
-
-- As a user, I want to track how long I’ve kept in touch with someone consistently, so I feel motivated to keep it going.
-
-- As a user, I want a visual representation of my streaks to feel a sense of achievement.
+## 🧠 Data Model (ERD)
 
 ```mermaid
 erDiagram
@@ -114,5 +120,33 @@ erDiagram
 
     connections ||--o{ connections_fields : "has many"
     connections ||--o{ dates : "has many"
-
 ```
+
+---
+
+## 🛠 Built With
+
+- 🐦 **Flutter** – cross-platform UI toolkit
+- 🧪 **Riverpod** – state management
+- 🧭 **GoRouter** – declarative navigation
+- 💾 **Drift** – local SQLite persistence with reactive queries
+- 🖼 **Custom Widgets** – handmade bottom nav bar, streak indicators, animations
+
+---
+
+## 🔐 Authentication (Coming Soon)
+
+- Planned integration with `firebase_auth` or custom login.
+- Routes protected with GoRouter redirection logic.
+
+---
+
+## 🤝 Contributing
+
+Coming soon. In the meantime, feel free to fork, explore, and reach out!
+
+---
+
+## 📄 License
+
+MIT – [Feel free to use and adapt.](LICENSE)
