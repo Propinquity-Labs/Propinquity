@@ -149,4 +149,4 @@ Coming soon. In the meantime, feel free to fork, explore, and reach out!
 
 ## 📄 License
 
-MIT – [Feel free to use and adapt.](LICENSE)
+[AGPL-3.0 license](LICENSE)
