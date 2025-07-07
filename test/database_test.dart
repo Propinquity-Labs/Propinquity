@@ -26,17 +26,17 @@ void main() {
   });
 
   test("insertExampleData inserts one connection and related fields", () async {
-    final Uint8List imageBytes = await rootBundle
-        .load("lib/assets/test_images/test_1_shrimp.png")
+    final Uint8List larryImage = await rootBundle
+        .load("lib/assets/test_images/test_2_1_larry.png")
         .then((ByteData b) => b.buffer.asUint8List());
 
     // Perform insertion (copying logic from your insertExampleData)
     final int connectionId = await db.connectionsTable.insertOne(
       ConnectionsTableCompanion(
-        connectionsName: const Value<String>("Harry Ron Franks"),
+        connectionsName: const Value<String>("Larry"),
         contactFrequency: const Value<String>("Weekly"),
         connectionsRelation: const Value<String>("Acquaintance"),
-        image: Value<Uint8List?>(imageBytes),
+        image: Value<Uint8List?>(larryImage),
       ),
     );
 
@@ -70,7 +70,7 @@ void main() {
     final List<ConnectionsTableData> connections =
         await db.select(db.connectionsTable).get();
     expect(connections.length, 1);
-    expect(connections.first.connectionsName, "Harry Ron Franks");
+    expect(connections.first.connectionsName, "Larry");
 
     // Verify fields
     final List<ConnectionsFieldsTableData> allFields =

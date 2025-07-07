@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
 class SwooshPainter extends CustomPainter {
   @override
@@ -39,10 +40,11 @@ class SwooshPainter extends CustomPainter {
 class MainLayout extends ConsumerWidget {
   const MainLayout({super.key, required this.title, required this.body});
   final String title;
-  final Widget body;
+  final List<Widget> body;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    context.canPop();
     return Scaffold(
       body: Stack(
         children: [
@@ -53,28 +55,18 @@ class MainLayout extends ConsumerWidget {
           ),
           // Foreground content
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 60),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+              padding: EdgeInsets.fromLTRB(0, context.canPop() ? 0 : 20, 0, 0),
+              child: ListView(
+                padding:
+                    EdgeInsets.fromLTRB(30, context.canPop() ? 0 : 60, 30, 0),
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style:
-                            Theme.of(context).textTheme.displayLarge?.copyWith(
-                                  color: Colors.black87,
-                                ),
-                      ),
-                    ],
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
-                  body,
+                  ...body
                 ],
-              ),
-            ),
-          ),
+              )),
         ],
       ),
     );

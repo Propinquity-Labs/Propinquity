@@ -9,10 +9,8 @@ class ModifyScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
     return const MainLayout(
-        title: "Add a Connection",
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[Text("Test")],
-        ));
+      title: "Add a Connection",
+      body: <Widget>[Text("Test")],
+    );
   }
 }
