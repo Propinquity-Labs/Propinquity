@@ -46,6 +46,15 @@ class MainLayout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     context.canPop();
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: context.canPop()
+          ? AppBar(
+              title: Text(title),
+              forceMaterialTransparency: true,
+              toolbarOpacity: 1,
+            )
+          : null,
       body: Stack(
         children: <Widget>[
           // Background swoosh
@@ -55,10 +64,9 @@ class MainLayout extends ConsumerWidget {
           ),
           // Foreground content
           Padding(
-              padding: EdgeInsets.fromLTRB(0, context.canPop() ? 0 : 20, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: ListView(
-                padding:
-                    EdgeInsets.fromLTRB(30, context.canPop() ? 0 : 60, 30, 0),
+                padding: const EdgeInsets.fromLTRB(30, 60, 30, 0),
                 children: <Widget>[
                   Text(
                     title,
