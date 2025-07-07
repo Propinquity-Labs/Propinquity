@@ -60,7 +60,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.press(find.text("Good Larry"));
+    await tester.tap(find.text("Good Larry"));
     expect(find.text("Good Larry"), findsAny);
   });
 }

@@ -34,30 +34,40 @@ void main() {
     container.dispose();
   });
 
-  testWidgets("Tests the home page", (WidgetTester tester) async {
+  testWidgets("Title text found on main page", (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MyApp(),
+      ),
+    );
 
     expect(find.text("Hi, how's it going!"), findsOneWidget);
   });
 
   testWidgets("Tests navigating through navbar", (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: MyApp()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MyApp(),
+      ),
+    );
 
     expect(find.text("Hi, how's it going!"), findsOneWidget);
 
-    await tester.press(find.byIcon(Icons.add_circle_outline_rounded));
+    await tester.tap(find.byIcon(Icons.add_circle_outline_rounded));
     await tester.pump();
 
     expect(find.text("Add a Connection"), findsOneWidget);
 
-    await tester.press(find.byIcon(Icons.settings_rounded));
+    await tester.tap(find.byIcon(Icons.settings_rounded));
     await tester.pump();
 
     expect(find.text("Settings"), findsOneWidget);
 
-    await tester.press(find.byIcon(Icons.home_rounded));
+    await tester.tap(find.byIcon(Icons.home_rounded));
     await tester.pump();
 
     expect(find.text("Hi, how's it going!"), findsOneWidget);
