@@ -12,7 +12,7 @@ void main() {
   late ProviderContainer container;
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
+  setUpAll(() {
     final executor = NativeDatabase.memory();
     db = AppDatabase(executor);
 
@@ -23,7 +23,7 @@ void main() {
     );
   });
 
-  tearDown(() async {
+  tearDownAll(() async {
     await db.close();
     container.dispose();
   });
