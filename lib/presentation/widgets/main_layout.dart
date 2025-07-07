@@ -47,7 +47,7 @@ class MainLayout extends ConsumerWidget {
     context.canPop();
     return Scaffold(
       body: Stack(
-        children: [
+        children: <Widget>[
           // Background swoosh
           CustomPaint(
             size: MediaQuery.of(context).size,
