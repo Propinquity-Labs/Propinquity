@@ -15,7 +15,7 @@ void main() async {
 
   if (shouldSeedTestData) {
     final dao = container.read(connectionsDaoProvider);
-    await dao.insertExampleData(); // ✅ calls your DAO method directly
+    await dao.insertExampleData();
   }
 
   runApp(
