@@ -38,9 +38,14 @@ class SwooshPainter extends CustomPainter {
 }
 
 class MainLayout extends ConsumerWidget {
-  const MainLayout({super.key, required this.title, required this.body});
+  const MainLayout(
+      {super.key,
+      required this.title,
+      required this.body,
+      this.hasSwoosh = true});
   final String title;
   final List<Widget> body;
+  final bool hasSwoosh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,10 +63,11 @@ class MainLayout extends ConsumerWidget {
       body: Stack(
         children: <Widget>[
           // Background swoosh
-          CustomPaint(
-            size: MediaQuery.of(context).size,
-            painter: SwooshPainter(),
-          ),
+          if (hasSwoosh)
+            CustomPaint(
+              size: MediaQuery.of(context).size,
+              painter: SwooshPainter(),
+            ),
           // Foreground content
           Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
