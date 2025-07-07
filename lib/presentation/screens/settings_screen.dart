@@ -10,17 +10,17 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: implement build
-    return MainLayout(
-        title: "Settings",
-        body: Center(
-            child: ElevatedButton(
-          onPressed: () {
-            final mode = ref.read(themeModeProvider.notifier);
-            mode.state = mode.state == AppThemeMode.light
-                ? AppThemeMode.dark
-                : AppThemeMode.light;
-          },
-          child: const Text("Toggle Theme"),
-        )));
+    return MainLayout(title: "Settings", body: <Widget>[
+      Center(
+          child: ElevatedButton(
+        onPressed: () {
+          final mode = ref.read(themeModeProvider.notifier);
+          mode.state = mode.state == AppThemeMode.light
+              ? AppThemeMode.dark
+              : AppThemeMode.light;
+        },
+        child: const Text("Toggle Theme"),
+      ))
+    ]);
   }
 }

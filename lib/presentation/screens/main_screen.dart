@@ -8,7 +8,8 @@ import "package:propinquity/presentation/screens/settings_screen.dart";
 import "package:propinquity/presentation/widgets/default_navbar.dart";
 
 class MainScreen extends ConsumerWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, required this.page});
+  final AppPage page;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
