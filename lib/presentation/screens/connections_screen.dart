@@ -11,12 +11,14 @@ class ConnectionsScreen extends ConsumerWidget {
     // TODO: implement build
     return MainLayout(
       title: connectionsObj.connectionsName,
-      body: Column(
-        children: <Widget>[
-          if (connectionsObj.image != null)
-            Center(child: Image.memory(connectionsObj.image!))
-        ],
-      ),
+      body: <Widget>[
+        if (connectionsObj.image != null)
+          Center(
+              child: Image.memory(
+            connectionsObj.image!,
+            height: 400,
+          )),
+      ],
     );
   }
 }
