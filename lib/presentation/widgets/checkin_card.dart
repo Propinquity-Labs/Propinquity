@@ -81,13 +81,23 @@ class _CheckinCardState extends State<CheckinCard> {
                         ],
                       )),
                 ),
-                IconButton(
-                    onPressed: widget.onTapCheck,
-                    icon: const Icon(
-                      Icons.check_box,
-                      color: Color.fromRGBO(54, 189, 106, 1),
-                      size: 60,
-                    ))
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+                    child: IconButton(
+                        onPressed: widget.onTapCheck,
+                        color: Colors.white,
+                        style: IconButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surface,
+                            padding: EdgeInsets.zero,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)))),
+                        icon: const Icon(
+                          Icons.check_box_rounded,
+                          color: Color.fromRGBO(54, 189, 106, 1),
+                          size: 60,
+                        )))
               ],
             ),
           ),
