@@ -84,6 +84,8 @@ class _CheckinCardState extends State<CheckinCard> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
                     child: IconButton(
+                        tooltip:
+                            "Tap to mark that you've checked in with ${widget.name}",
                         onPressed: widget.onTapCheck,
                         color: Colors.white,
                         style: IconButton.styleFrom(

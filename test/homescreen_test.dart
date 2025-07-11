@@ -63,4 +63,33 @@ void main() {
     await tester.tap(find.text("Good Larry").last);
     expect(find.text("Good Larry"), findsAny);
   });
+  testWidgets("test navigate to first checkin", (WidgetTester tester) async {
+    final ConnectionsDAO dao = db.connectionsDAO;
+    await dao.insertExampleData();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MyApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Good Larry").first);
+    expect(find.text("Good Larry"), findsAny);
+  });
+  testWidgets("test check in with good larry", (WidgetTester tester) async {
+    final ConnectionsDAO dao = db.connectionsDAO;
+    await dao.insertExampleData();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MyApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text("Good Larry"), findsNWidgets(2));
+    await tester.tap(
+        find.byTooltip("Tap to mark that you've checked in with Good Larry"));
+    await tester.pumpAndSettle();
+    expect(find.text("Good Larry"), findsOneWidget);
+  });
 }
