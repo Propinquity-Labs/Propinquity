@@ -59,53 +59,26 @@ class HomeScreen extends ConsumerWidget {
               }
               return Column(
                 children: <Widget>[
-                  for (int i = 0; i < checkInConnections.length; i += 2)
-                    Row(
-                      children: <Widget>[
-                        if (i < checkInConnections.length)
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: CheckinCard(
-                              name: checkInConnections[i].connectionsName,
-                              onTap: () {
-                                context.push(
-                                  "/contact?id=${checkInConnections[i].connectionsId}",
-                                  extra: checkInConnections[i],
-                                );
-                              },
-                              image: checkInConnections[i].image,
-                              onTapCheck: () {
-                                connectionDao.updateCheckinByConnectionID(
-                                    checkInConnections[i].connectionsId);
-                              },
-                            ),
-                          )),
-                        if (i + 1 < checkInConnections.length)
-                          Expanded(
-                              child: Padding(
-                            padding: EdgeInsets.all(4),
-                            child: CheckinCard(
-                              name: checkInConnections[i + 1].connectionsName,
-                              onTap: () {
-                                context.push(
-                                  "/contact?id=${checkInConnections[i + 1].connectionsId}",
-                                  extra: checkInConnections[i + 1],
-                                );
-                              },
-                              image: checkInConnections[i + 1].image,
-                              onTapCheck: () {
-                                connectionDao.updateCheckinByConnectionID(
-                                    checkInConnections[i + 1].connectionsId);
-                              },
-                            ),
-                          )),
-                        if (i + 1 >= checkInConnections.length)
-                          const Expanded(
-                            child: SizedBox(),
-                          )
-                      ],
-                    ),
+                  ...checkInConnections.map((ConnectionsTableData connection) {
+                    return Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: CheckinCard(
+                        name: connection.connectionsName,
+                        onTap: () {
+                          context.push(
+                            "/contact?id=${connection.connectionsId}",
+                            extra: connection,
+                          );
+                        },
+                        frequency: connection.contactFrequency,
+                        image: connection.image,
+                        onTapCheck: () {
+                          connectionDao.updateCheckinByConnectionID(
+                              connection.connectionsId);
+                        },
+                      ),
+                    );
+                  })
                 ],
               );
             },
@@ -130,16 +103,16 @@ class HomeScreen extends ConsumerWidget {
               }
               return Column(
                   children: connections
-                      .map((ConnectionsTableData contact) => ConnectionsCard(
-                            name: contact.connectionsName,
-                            frequency: contact.contactFrequency,
-                            relation: contact.connectionsRelation,
-                            image: contact.image,
-                            score: contact.calculatedScore,
+                      .map((ConnectionsTableData connection) => ConnectionsCard(
+                            name: connection.connectionsName,
+                            frequency: connection.contactFrequency,
+                            relation: connection.connectionsRelation,
+                            image: connection.image,
+                            score: connection.calculatedScore,
                             onTap: () {
                               context.push(
-                                  "/contact?id=${contact.connectionsId}",
-                                  extra: contact);
+                                  "/contact?id=${connection.connectionsId}",
+                                  extra: connection);
                             },
                           ))
                       .toList());

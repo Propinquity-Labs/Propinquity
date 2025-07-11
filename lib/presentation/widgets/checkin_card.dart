@@ -7,6 +7,7 @@ class CheckinCard extends StatefulWidget {
       {super.key,
       required this.name,
       this.onTap,
+      this.frequency = "Jee",
       required this.image,
       required this.onTapCheck});
 
@@ -14,6 +15,7 @@ class CheckinCard extends StatefulWidget {
   final String name;
   final Uint8List? image;
   final void Function()? onTapCheck;
+  final String frequency;
 
   @override
   State<CheckinCard> createState() => _CheckinCardState();
@@ -25,13 +27,7 @@ class _CheckinCardState extends State<CheckinCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          if (!canCheck) {
-            setState(() {
-              canCheck = true;
-            });
-          }
-        },
+        onTap: widget.onTap,
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -40,10 +36,10 @@ class _CheckinCardState extends State<CheckinCard> {
                 const Color.fromRGBO(243, 92, 213, 1.0)
               ], begin: Alignment.bottomCenter, end: Alignment.topCenter)),
           child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
+            padding: const EdgeInsets.fromLTRB(10, 1, 10, 1),
+            child: Row(
               children: <Widget>[
-                widget.image != null && !canCheck
+                widget.image != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
@@ -52,29 +48,46 @@ class _CheckinCardState extends State<CheckinCard> {
                           widget.image!,
                         ),
                       )
-                    : SizedBox(
-                        height: 60,
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                  onPressed: widget.onTapCheck,
-                                  icon: const Icon(Icons.check_rounded)),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      canCheck = false;
-                                    });
-                                  },
-                                  icon: const Icon(Icons.cancel_rounded))
-                            ])),
-                Text(widget.name,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                    softWrap: true,
-                    overflow: TextOverflow.visible, // or TextOverflow.ellipsis
-                    maxLines: null)
+                    : const SizedBox(height: 60),
+                Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(widget.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                              softWrap: true,
+                              overflow: TextOverflow
+                                  .visible, // or TextOverflow.ellipsis
+                              maxLines: null),
+                          Text(widget.frequency,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                              softWrap: true,
+                              overflow: TextOverflow
+                                  .visible, // or TextOverflow.ellipsis
+                              maxLines: null)
+                        ],
+                      )),
+                ),
+                IconButton(
+                    onPressed: widget.onTapCheck,
+                    icon: const Icon(
+                      Icons.check_box,
+                      color: Color.fromRGBO(54, 189, 106, 1),
+                      size: 60,
+                    ))
               ],
             ),
           ),
