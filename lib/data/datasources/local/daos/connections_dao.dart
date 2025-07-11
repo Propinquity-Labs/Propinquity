@@ -123,7 +123,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
 
     connectionId = await into(connectionsTable).insert(
         ConnectionsTableCompanion(
-            checkIn: const Value<bool>(true),
+            checkIn: const Value<bool>(false),
             connectionsId: const Value<int>(2),
             connectionsName: const Value<String>("James"),
             contactFrequency: const Value<String>("Monthly"),

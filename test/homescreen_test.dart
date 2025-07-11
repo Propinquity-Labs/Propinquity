@@ -12,7 +12,7 @@ void main() {
   late ProviderContainer container;
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
+  setUp(() {
     final executor = NativeDatabase.memory();
     db = AppDatabase(executor);
 
@@ -23,7 +23,7 @@ void main() {
     );
   });
 
-  tearDownAll(() async {
+  tearDown(() async {
     await db.close();
     container.dispose();
   });
@@ -46,9 +46,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text("Good Larry"), findsOneWidget);
+    expect(find.text("Good Larry"), findsNWidgets(2));
     expect(find.text("James"), findsOneWidget);
-    expect(find.text("The Creature"), findsOneWidget);
+    expect(find.text("The Creature"), findsNWidgets(2));
   });
   testWidgets("test navigate to first connection", (WidgetTester tester) async {
     final ConnectionsDAO dao = db.connectionsDAO;
@@ -60,7 +60,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text("Good Larry"));
+    await tester.tap(find.text("Good Larry").last);
     expect(find.text("Good Larry"), findsAny);
   });
 }
