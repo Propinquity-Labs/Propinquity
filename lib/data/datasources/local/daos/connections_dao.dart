@@ -51,10 +51,17 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
       // Inserts the fields into the database(pre-sorted)
       for (final ConnectionsFieldsTableCompanion fieldsEntity
           in fieldsEntityList) {
-        await into(connectionsFieldsTable)
-            .insert(fieldsEntity.copyWith(connectionsId: Value(connectionId)));
+        await into(connectionsFieldsTable).insert(
+            fieldsEntity.copyWith(connectionsId: Value<int>(connectionId)));
       }
     });
+  }
+
+  Future<void> updateCheckinByConnectionID(int connectionId) async {
+    (update(connectionsTable)
+          ..where(($ConnectionsTableTable conTbl) =>
+              conTbl.connectionsId.equals(connectionId)))
+        .write(const ConnectionsTableCompanion(checkIn: Value<bool>(false)));
   }
 
   Future<void> insertExampleData() async {

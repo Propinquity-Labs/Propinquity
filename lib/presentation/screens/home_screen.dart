@@ -8,11 +8,10 @@ import "package:propinquity/presentation/widgets/checkin_card.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
-final FutureProvider<List<ConnectionsTableData>> connectionsListProvider =
-    FutureProvider<List<ConnectionsTableData>>(
-        (FutureProviderRef<List<ConnectionsTableData>> ref) async {
+final StreamProvider<List<ConnectionsTableData>> connectionsListProvider =
+    StreamProvider<List<ConnectionsTableData>>((ref) {
   final ConnectionsDAO dao = ref.watch(connectionsDaoProvider);
-  return dao.getAllConnections();
+  return dao.watchAllConnections();
 });
 
 class HomeScreen extends ConsumerWidget {
@@ -24,6 +23,8 @@ class HomeScreen extends ConsumerWidget {
 
     final AsyncValue<List<ConnectionsTableData>> connectionsAsync =
         ref.watch(connectionsListProvider);
+
+    final connectionDao = ref.read(connectionsDaoProvider);
 
     return MainLayout(
       title: "Hi, how's it going!",
@@ -65,7 +66,10 @@ class HomeScreen extends ConsumerWidget {
                                 );
                               },
                               image: checkInConnections[i].image,
-                              onTapCheck: () {},
+                              onTapCheck: () {
+                                connectionDao.updateCheckinByConnectionID(
+                                    checkInConnections[i].connectionsId);
+                              },
                             ),
                           ),
                         if (i + 1 < checkInConnections.length)
