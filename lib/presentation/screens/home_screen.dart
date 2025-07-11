@@ -4,9 +4,10 @@ import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
 import "package:propinquity/data/datasources/local/daos/connections_dao.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
-import "package:propinquity/presentation/widgets/checkin_card.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
+
+import "../widgets/checkin_card.dart";
 
 final StreamProvider<List<ConnectionsTableData>> connectionsListProvider =
     StreamProvider<List<ConnectionsTableData>>((ref) {
@@ -25,6 +26,8 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(connectionsListProvider);
 
     final connectionDao = ref.read(connectionsDaoProvider);
+
+    final _animatedListKey = GlobalKey<AnimatedListState>();
 
     return MainLayout(
       title: "Hi, how's it going!",
@@ -57,27 +60,40 @@ class HomeScreen extends ConsumerWidget {
               if (checkInConnections.isEmpty) {
                 return const Center(child: Text("All Caught Up!"));
               }
+
               return Column(
-                children: <Widget>[
-                  ...checkInConnections.map((ConnectionsTableData connection) {
-                    return Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: CheckinCard(
-                        name: connection.connectionsName,
-                        onTap: () {
-                          context.push(
-                            "/contact?id=${connection.connectionsId}",
-                            extra: connection,
+                children: [
+                  ...checkInConnections.map((connection) {
+                    return TweenAnimationBuilder(
+                        tween: Tween(begin: Offset(1, 0), end: Offset(0, 0)),
+                        duration: Duration(milliseconds: 1000),
+                        builder: (context, offset, child) {
+                          return Transform.translate(
+                            offset: offset * 20, // control slide distance
+                            child: Opacity(
+                              opacity: 1 - offset.dx, // fade in
+                              child: child,
+                            ),
                           );
                         },
-                        frequency: connection.contactFrequency,
-                        image: connection.image,
-                        onTapCheck: () {
-                          connectionDao.updateCheckinByConnectionID(
-                              connection.connectionsId);
-                        },
-                      ),
-                    );
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: CheckinCard(
+                            name: connection.connectionsName,
+                            onTap: () {
+                              context.push(
+                                "/contact?id=${connection.connectionsId}",
+                                extra: connection,
+                              );
+                            },
+                            frequency: connection.contactFrequency,
+                            image: connection.image,
+                            onTapCheck: () {
+                              connectionDao.updateCheckinByConnectionID(
+                                  connection.connectionsId);
+                            },
+                          ),
+                        ));
                   })
                 ],
               );
