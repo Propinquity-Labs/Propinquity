@@ -64,6 +64,8 @@ class HomeScreen extends ConsumerWidget {
                       children: <Widget>[
                         if (i < checkInConnections.length)
                           Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.all(4),
                             child: CheckinCard(
                               name: checkInConnections[i].connectionsName,
                               onTap: () {
@@ -78,9 +80,11 @@ class HomeScreen extends ConsumerWidget {
                                     checkInConnections[i].connectionsId);
                               },
                             ),
-                          ),
+                          )),
                         if (i + 1 < checkInConnections.length)
                           Expanded(
+                              child: Padding(
+                            padding: EdgeInsets.all(4),
                             child: CheckinCard(
                               name: checkInConnections[i + 1].connectionsName,
                               onTap: () {
@@ -90,9 +94,12 @@ class HomeScreen extends ConsumerWidget {
                                 );
                               },
                               image: checkInConnections[i + 1].image,
-                              onTapCheck: () {},
+                              onTapCheck: () {
+                                connectionDao.updateCheckinByConnectionID(
+                                    checkInConnections[i + 1].connectionsId);
+                              },
                             ),
-                          ),
+                          )),
                         if (i + 1 >= checkInConnections.length)
                           const Expanded(
                             child: SizedBox(),

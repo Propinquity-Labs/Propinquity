@@ -1,30 +1,35 @@
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
 
-final StateProvider<bool> canCheckProvider =
-    StateProvider<bool>((ref) => false);
-
-class CheckinCard extends ConsumerWidget {
+class CheckinCard extends StatefulWidget {
   const CheckinCard(
       {super.key,
       required this.name,
       this.onTap,
       required this.image,
       required this.onTapCheck});
+
   final void Function()? onTap;
   final String name;
   final Uint8List? image;
   final void Function()? onTapCheck;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final canCheck = ref.watch(canCheckProvider);
+  State<CheckinCard> createState() => _CheckinCardState();
+}
+
+class _CheckinCardState extends State<CheckinCard> {
+  bool canCheck = false;
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
           if (!canCheck) {
-            ref.read(canCheckProvider.notifier).state = true;
+            setState(() {
+              canCheck = true;
+            });
           }
         },
         child: Container(
@@ -38,13 +43,13 @@ class CheckinCard extends ConsumerWidget {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
-                image != null && !canCheck
+                widget.image != null && !canCheck
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.memory(
                           width: 60,
                           height: 60,
-                          image!,
+                          widget.image!,
                         ),
                       )
                     : SizedBox(
@@ -54,16 +59,17 @@ class CheckinCard extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               IconButton(
-                                  onPressed: onTapCheck,
+                                  onPressed: widget.onTapCheck,
                                   icon: const Icon(Icons.check_rounded)),
                               IconButton(
                                   onPressed: () {
-                                    ref.watch(canCheckProvider.notifier).state =
-                                        false;
+                                    setState(() {
+                                      canCheck = false;
+                                    });
                                   },
                                   icon: const Icon(Icons.cancel_rounded))
                             ])),
-                Text(name,
+                Text(widget.name,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary),
                     softWrap: true,
