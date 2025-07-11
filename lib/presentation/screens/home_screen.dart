@@ -41,6 +41,13 @@ class HomeScreen extends ConsumerWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(2),
+          child: Text(
+            "Check-In",
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
           child: connectionsAsync.when(
             data: (List<ConnectionsTableData> connections) {
               final List<ConnectionsTableData> checkInConnections = connections
@@ -48,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
                       (ConnectionsTableData connection) => connection.checkIn)
                   .toList();
               if (checkInConnections.isEmpty) {
-                return const Center(child: Text("Nothing Found"));
+                return const Center(child: Text("All Caught Up!"));
               }
               return Column(
                 children: <Widget>[
@@ -102,10 +109,17 @@ class HomeScreen extends ConsumerWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(2),
+          child: Text(
+            "Connections",
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
           child: connectionsAsync.when(
             data: (List<ConnectionsTableData> connections) {
               if (connections.isEmpty) {
-                return const Center(child: Text("Nothing Found"));
+                return null;
               }
               return Column(
                   children: connections

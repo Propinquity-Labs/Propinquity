@@ -3,7 +3,8 @@ import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
-final canCheckProvider = StateProvider<bool>((ref) => false);
+final StateProvider<bool> canCheckProvider =
+    StateProvider<bool>((ref) => false);
 
 class CheckinCard extends ConsumerWidget {
   const CheckinCard(
