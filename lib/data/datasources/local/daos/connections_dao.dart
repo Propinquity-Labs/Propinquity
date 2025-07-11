@@ -51,10 +51,17 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
       // Inserts the fields into the database(pre-sorted)
       for (final ConnectionsFieldsTableCompanion fieldsEntity
           in fieldsEntityList) {
-        await into(connectionsFieldsTable)
-            .insert(fieldsEntity.copyWith(connectionsId: Value(connectionId)));
+        await into(connectionsFieldsTable).insert(
+            fieldsEntity.copyWith(connectionsId: Value<int>(connectionId)));
       }
     });
+  }
+
+  Future<void> updateCheckinByConnectionID(int connectionId) async {
+    (update(connectionsTable)
+          ..where(($ConnectionsTableTable conTbl) =>
+              conTbl.connectionsId.equals(connectionId)))
+        .write(const ConnectionsTableCompanion(checkIn: Value<bool>(false)));
   }
 
   Future<void> insertExampleData() async {
@@ -75,6 +82,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
 
     int connectionId = await into(connectionsTable).insert(
         ConnectionsTableCompanion(
+            checkIn: const Value<bool>(true),
             connectionsId: const Value<int>(1),
             connectionsName: const Value<String>("Good Larry"),
             contactFrequency: const Value<String>("Weekly"),
@@ -115,6 +123,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
 
     connectionId = await into(connectionsTable).insert(
         ConnectionsTableCompanion(
+            checkIn: const Value<bool>(false),
             connectionsId: const Value<int>(2),
             connectionsName: const Value<String>("James"),
             contactFrequency: const Value<String>("Monthly"),
@@ -154,6 +163,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
 
     connectionId = await into(connectionsTable).insert(
         ConnectionsTableCompanion(
+            checkIn: const Value<bool>(true),
             connectionsId: const Value<int>(3),
             connectionsName: const Value<String>("The Creature"),
             contactFrequency: const Value<String>("Daily"),

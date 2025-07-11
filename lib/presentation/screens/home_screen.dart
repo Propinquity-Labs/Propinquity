@@ -2,15 +2,16 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
-import "package:propinquity/application/providers/go_router_provider.dart";
+import "package:propinquity/data/datasources/local/daos/connections_dao.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/presentation/widgets/checkin_card.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
-final connectionsListProvider =
-    FutureProvider<List<ConnectionsTableData>>((ref) async {
-  final dao = ref.watch(connectionsDaoProvider);
-  return dao.getAllConnections();
+final StreamProvider<List<ConnectionsTableData>> connectionsListProvider =
+    StreamProvider<List<ConnectionsTableData>>((ref) {
+  final ConnectionsDAO dao = ref.watch(connectionsDaoProvider);
+  return dao.watchAllConnections();
 });
 
 class HomeScreen extends ConsumerWidget {
@@ -20,8 +21,10 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO remove
 
-    final connectionsAsync = ref.watch(connectionsListProvider);
-    final router = ref.watch(goRouterProvider);
+    final AsyncValue<List<ConnectionsTableData>> connectionsAsync =
+        ref.watch(connectionsListProvider);
+
+    final connectionDao = ref.read(connectionsDaoProvider);
 
     return MainLayout(
       title: "Hi, how's it going!",
@@ -38,23 +41,78 @@ class HomeScreen extends ConsumerWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(2),
+          child: Text(
+            "Check-In",
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
+          child: connectionsAsync.when(
+            data: (List<ConnectionsTableData> connections) {
+              final List<ConnectionsTableData> checkInConnections = connections
+                  .where(
+                      (ConnectionsTableData connection) => connection.checkIn)
+                  .toList();
+              if (checkInConnections.isEmpty) {
+                return const Center(child: Text("All Caught Up!"));
+              }
+              return Column(
+                children: <Widget>[
+                  ...checkInConnections.map((ConnectionsTableData connection) {
+                    return Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: CheckinCard(
+                        name: connection.connectionsName,
+                        onTap: () {
+                          context.push(
+                            "/contact?id=${connection.connectionsId}",
+                            extra: connection,
+                          );
+                        },
+                        frequency: connection.contactFrequency,
+                        image: connection.image,
+                        onTapCheck: () {
+                          connectionDao.updateCheckinByConnectionID(
+                              connection.connectionsId);
+                        },
+                      ),
+                    );
+                  })
+                ],
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (Object error, StackTrace stackTrace) =>
+                Center(child: Text("Error: $error")),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
+          child: Text(
+            "Connections",
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
           child: connectionsAsync.when(
             data: (List<ConnectionsTableData> connections) {
               if (connections.isEmpty) {
-                return const Center(child: Text("Nothing Found"));
+                return null;
               }
               return Column(
                   children: connections
-                      .map((ConnectionsTableData contact) => ConnectionsCard(
-                            name: contact.connectionsName,
-                            frequency: contact.contactFrequency,
-                            relation: contact.connectionsRelation,
-                            image: contact.image,
-                            score: contact.calculatedScore,
+                      .map((ConnectionsTableData connection) => ConnectionsCard(
+                            name: connection.connectionsName,
+                            frequency: connection.contactFrequency,
+                            relation: connection.connectionsRelation,
+                            image: connection.image,
+                            score: connection.calculatedScore,
                             onTap: () {
                               context.push(
-                                  "/contact?id=${contact.connectionsId}",
-                                  extra: contact);
+                                  "/contact?id=${connection.connectionsId}",
+                                  extra: connection);
                             },
                           ))
                       .toList());
