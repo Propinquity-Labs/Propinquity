@@ -39,7 +39,6 @@ final Provider<GoRouter> goRouterProvider =
                 return CustomTransitionPage(
                     child: const ModifyScreen(),
                     transitionsBuilder: (_, __, ___, Widget child) => child);
-                ;
               },
             ),
             GoRoute(

@@ -2,14 +2,16 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
-import "package:propinquity/application/providers/go_router_provider.dart";
+import "package:propinquity/data/datasources/local/daos/connections_dao.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/presentation/widgets/checkin_card.dart";
 import "package:propinquity/presentation/widgets/connections_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
-final connectionsListProvider =
-    FutureProvider<List<ConnectionsTableData>>((ref) async {
-  final dao = ref.watch(connectionsDaoProvider);
+final FutureProvider<List<ConnectionsTableData>> connectionsListProvider =
+    FutureProvider<List<ConnectionsTableData>>(
+        (FutureProviderRef<List<ConnectionsTableData>> ref) async {
+  final ConnectionsDAO dao = ref.watch(connectionsDaoProvider);
   return dao.getAllConnections();
 });
 
@@ -20,8 +22,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO remove
 
-    final connectionsAsync = ref.watch(connectionsListProvider);
-    final router = ref.watch(goRouterProvider);
+    final AsyncValue<List<ConnectionsTableData>> connectionsAsync =
+        ref.watch(connectionsListProvider);
 
     return MainLayout(
       title: "Hi, how's it going!",
@@ -34,6 +36,64 @@ class HomeScreen extends ConsumerWidget {
                 .textTheme
                 .bodyMedium
                 ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(2),
+          child: connectionsAsync.when(
+            data: (List<ConnectionsTableData> connections) {
+              final List<ConnectionsTableData> checkInConnections = connections
+                  .where(
+                      (ConnectionsTableData connection) => connection.checkIn)
+                  .toList();
+              if (checkInConnections.isEmpty) {
+                return const Center(child: Text("Nothing Found"));
+              }
+              return Column(
+                children: <Widget>[
+                  for (int i = 0; i < checkInConnections.length; i += 2)
+                    Row(
+                      children: <Widget>[
+                        if (i < checkInConnections.length)
+                          Expanded(
+                            child: CheckinCard(
+                              name: checkInConnections[i].connectionsName,
+                              onTap: () {
+                                context.push(
+                                  "/contact?id=${checkInConnections[i].connectionsId}",
+                                  extra: checkInConnections[i],
+                                );
+                              },
+                              image: checkInConnections[i].image,
+                              onTapCheck: () {},
+                            ),
+                          ),
+                        if (i + 1 < checkInConnections.length)
+                          Expanded(
+                            child: CheckinCard(
+                              name: checkInConnections[i + 1].connectionsName,
+                              onTap: () {
+                                context.push(
+                                  "/contact?id=${checkInConnections[i + 1].connectionsId}",
+                                  extra: checkInConnections[i + 1],
+                                );
+                              },
+                              image: checkInConnections[i + 1].image,
+                              onTapCheck: () {},
+                            ),
+                          ),
+                        if (i + 1 >= checkInConnections.length)
+                          const Expanded(
+                            child: SizedBox(),
+                          )
+                      ],
+                    ),
+                ],
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (Object error, StackTrace stackTrace) =>
+                Center(child: Text("Error: $error")),
           ),
         ),
         Padding(

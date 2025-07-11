@@ -75,6 +75,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
 
     int connectionId = await into(connectionsTable).insert(
         ConnectionsTableCompanion(
+            checkIn: const Value<bool>(true),
             connectionsId: const Value<int>(1),
             connectionsName: const Value<String>("Good Larry"),
             contactFrequency: const Value<String>("Weekly"),
