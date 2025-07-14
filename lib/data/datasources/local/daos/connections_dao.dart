@@ -64,6 +64,28 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
         .write(const ConnectionsTableCompanion(checkIn: Value<bool>(false)));
   }
 
+  Future<ConnectionsTableData?> getConnectionByID(int connectionId) async {
+    return (await (select(connectionsTable)
+          ..where(($ConnectionsTableTable conTbl) =>
+              conTbl.connectionsId.equals(connectionId)))
+        .getSingleOrNull());
+  }
+
+  Future<List<ConnectionsTableData>> getAllFields() =>
+      select(connectionsTable).get();
+
+  Future<List<ConnectionsFieldsTableData>> getFieldsByConnectionID(int id) =>
+      (select(connectionsFieldsTable)
+            ..where(($ConnectionsFieldsTableTable tbl) =>
+                tbl.connectionsId.equals(id)))
+          .get();
+
+  Stream<List<ConnectionsFieldsTableData>> watchFieldsByConnectionID(int id) =>
+      (select(connectionsFieldsTable)
+            ..where(($ConnectionsFieldsTableTable tbl) =>
+                tbl.connectionsId.equals(id)))
+          .watch();
+
   Future<void> insertExampleData() async {
     final Uint8List larryImage =
         (await rootBundle.load("lib/assets/test_images/test_2_1_larry.png"))
