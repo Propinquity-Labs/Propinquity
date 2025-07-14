@@ -2,6 +2,8 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/providers/connections_provider.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/data/models/field_models.dart";
+import "package:propinquity/presentation/widgets/additional_field.dart";
 import "package:propinquity/presentation/widgets/connection_information_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
@@ -73,25 +75,74 @@ class ConnectionsScreen extends ConsumerWidget {
                 ))
           ],
         ),
+        Text(
+          "Important Dates",
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
         Row(
-          children: [
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             asyncFields.when(
                 data: (List<ConnectionsFieldsTableData> fields) {
-                  return Column(
+                  // Check if important dates
+                  final List<ConnectionsFieldsTableData> dates = fields
+                      .where((ConnectionsFieldsTableData field) =>
+                          field.fieldType == FieldType.dateBirthday)
+                      .toList();
+                  return Flexible(
+                      child: Column(
                     children: <Widget>[
-                      ...fields.map((ConnectionsFieldsTableData field) {
-                        return Column(
-                          children: <Widget>[Text(field.fieldValue)],
+                      ...dates.map((ConnectionsFieldsTableData field) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: AdditionalField(
+                            fieldType: field.fieldType,
+                            fieldValue: field.fieldValue,
+                          ),
                         );
                       })
                     ],
-                  );
+                  ));
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (Object error, StackTrace stackTrace) =>
                     Center(child: Text("Error: $error")))
           ],
-        )
+        ),
+        Text(
+          "Other Fields",
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            asyncFields.when(
+                data: (List<ConnectionsFieldsTableData> fields) {
+                  // Check if important dates
+                  final List<ConnectionsFieldsTableData> dates = fields
+                      .where((ConnectionsFieldsTableData field) =>
+                          field.fieldType != FieldType.dateBirthday)
+                      .toList();
+                  return Flexible(
+                      child: Column(
+                    children: <Widget>[
+                      ...dates.map((ConnectionsFieldsTableData field) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: AdditionalField(
+                            fieldType: field.fieldType,
+                            fieldValue: field.fieldValue,
+                          ),
+                        );
+                      })
+                    ],
+                  ));
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (Object error, StackTrace stackTrace) =>
+                    Center(child: Text("Error: $error")))
+          ],
+        ),
       ],
     );
   }

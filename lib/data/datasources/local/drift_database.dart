@@ -4,6 +4,7 @@ import "package:propinquity/data/datasources/local/daos/connections_dao.dart";
 import "package:propinquity/data/datasources/local/tables/connections_fields_table.dart";
 import "package:propinquity/data/datasources/local/tables/connections_table.dart";
 import "package:propinquity/data/datasources/local/tables/dates_table.dart";
+import "package:propinquity/data/models/field_models.dart";
 
 part "drift_database.g.dart";
 
