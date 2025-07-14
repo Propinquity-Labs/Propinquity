@@ -55,7 +55,6 @@ class MainLayout extends ConsumerWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: context.canPop()
           ? AppBar(
-              title: Text(title),
               forceMaterialTransparency: true,
               toolbarOpacity: 1,
             )
