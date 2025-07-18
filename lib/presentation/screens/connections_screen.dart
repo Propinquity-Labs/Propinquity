@@ -8,6 +8,7 @@ import "package:propinquity/presentation/widgets/connection_information_card.dar
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
 import "../../data/datasources/local/daos/connections_dao.dart";
+import "../widgets/statistics_card.dart";
 
 final connectionFieldProvider =
     StreamProvider.family<List<ConnectionsFieldsTableData>, int>((ref, id) {
@@ -27,57 +28,67 @@ class ConnectionsScreen extends ConsumerWidget {
     final AsyncValue<List<ConnectionsFieldsTableData>> asyncFields =
         ref.watch(connectionFieldProvider(connectionsObj.connectionsId));
 
-    // TODO: implement build
     return MainLayout(
       title: connectionsObj.connectionsName,
       body: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (connectionsObj.image != null)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (connectionsObj.image != null)
+                Flexible(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Container(
+                        width: size,
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(0, 0, 0, 0.1),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.memory(
+                              connectionsObj.image!,
+                              width: size,
+                              fit: BoxFit.fitWidth,
+                            )),
+                      ),
+                    )),
               Flexible(
                   flex: 1,
-                  child: Container(
-                    width: size,
-                    decoration: const BoxDecoration(
-                        color: Color.fromRGBO(0, 0, 0, 0.1),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.memory(
-                          connectionsObj.image!,
-                          width: size,
-                          fit: BoxFit.fitWidth,
-                        )),
-                  )),
-            Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-                        child: ConnectionInformationCard(
-                            bodyString: connectionsObj.connectionsRelation,
-                            headerString: "Relationship to You:"),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
                           child: ConnectionInformationCard(
-                              bodyString: connectionsObj.contactFrequency,
-                              headerString: "How Often You Communicate:"))
-                    ],
-                  ),
-                ))
-          ],
+                              bodyString: connectionsObj.connectionsRelation,
+                              headerString: "Relationship to You:"),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            child: ConnectionInformationCard(
+                                bodyString: connectionsObj.contactFrequency,
+                                headerString: "How Often You Communicate:"))
+                      ],
+                    ),
+                  ))
+            ],
+          ),
         ),
-        Text(
-          "Important Dates",
-          style: Theme.of(context).textTheme.displaySmall,
+        const StatisticsCard(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+          child: Text(
+            "Important Dates",
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -109,9 +120,12 @@ class ConnectionsScreen extends ConsumerWidget {
                     Center(child: Text("Error: $error")))
           ],
         ),
-        Text(
-          "Other Fields",
-          style: Theme.of(context).textTheme.displaySmall,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+          child: Text(
+            "Other Fields",
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

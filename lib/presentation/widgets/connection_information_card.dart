@@ -26,7 +26,7 @@ class ConnectionInformationCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+            padding: const EdgeInsets.fromLTRB(6, 6, 4, 6),
             child: Text(
               headerString,
               style: Theme.of(context)
@@ -36,7 +36,7 @@ class ConnectionInformationCard extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+            padding: const EdgeInsets.fromLTRB(6, 0, 4, 6),
             child: Text(bodyString,
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

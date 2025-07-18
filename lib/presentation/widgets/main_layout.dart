@@ -42,15 +42,18 @@ class MainLayout extends ConsumerWidget {
       {super.key,
       required this.title,
       required this.body,
-      this.hasSwoosh = true});
+      this.hasSwoosh = true,
+      this.floatingActionButton});
   final String title;
   final List<Widget> body;
   final bool hasSwoosh;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     context.canPop();
     return Scaffold(
+      floatingActionButton: floatingActionButton,
       extendBodyBehindAppBar: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: context.canPop()

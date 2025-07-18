@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
-import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/data/models/field_models.dart";
 
 class Field {
   Field(this.icon, this.fieldTitle);
-  final IconData icon;
+  final IconData? icon;
   final String fieldTitle;
 }
 
-class AdditionalField extends ConsumerWidget {
+class AdditionalField extends StatelessWidget {
   const AdditionalField(
       {super.key,
       required this.fieldType,
@@ -34,19 +33,19 @@ class AdditionalField extends ConsumerWidget {
         }
       default:
         {
-          return Field(Icons.cancel_rounded, "Not Assigned");
+          return Field(null, "Not Assigned");
         }
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // TODO: implement build
     final Field fieldData = enumToField(fieldType);
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               Theme.of(context).colorScheme.secondary,

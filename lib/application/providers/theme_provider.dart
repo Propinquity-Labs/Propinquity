@@ -39,12 +39,22 @@ final defaultTextTheme = const TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: "Baloo2",
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: FontWeight.bold,
   ),
   titleLarge: TextStyle(
     fontFamily: "Baloo2",
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+  ),
+  titleMedium: TextStyle(
+    fontFamily: "Baloo2",
     fontSize: 22,
+    fontWeight: FontWeight.w600,
+  ),
+  titleSmall: TextStyle(
+    fontFamily: "Baloo2",
+    fontSize: 20,
     fontWeight: FontWeight.w600,
   ),
   bodyLarge: TextStyle(
@@ -54,6 +64,10 @@ final defaultTextTheme = const TextTheme(
   bodyMedium: TextStyle(
     fontFamily: "IBMPlexSans",
     fontSize: 14,
+  ),
+  bodySmall: TextStyle(
+    fontFamily: "IBMPlexSans",
+    fontSize: 12,
   ),
   labelLarge: TextStyle(
     fontFamily: "IBMPlexSans",
