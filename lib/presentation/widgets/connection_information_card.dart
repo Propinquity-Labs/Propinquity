@@ -18,7 +18,7 @@ class ConnectionInformationCard extends ConsumerWidget {
       width: width,
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(6)),
-          gradient: LinearGradient(colors: [
+          gradient: LinearGradient(colors: <Color>[
             Theme.of(context).colorScheme.secondary,
             Theme.of(context).colorScheme.secondary
           ])),

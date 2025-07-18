@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 class StatisticsCard extends ConsumerWidget {
-  const StatisticsCard({super.key, this.calculatedScore = 20});
+  const StatisticsCard({super.key, this.calculatedScore});
 
   final int? calculatedScore;
 

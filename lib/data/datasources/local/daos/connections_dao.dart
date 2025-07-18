@@ -110,6 +110,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
             connectionsName: const Value<String>("Good Larry"),
             contactFrequency: const Value<String>("Weekly"),
             connectionsRelation: const Value<String>("Friends"),
+            calculatedScore: const Value<int>(69),
             image: Value<Uint8List?>(larryImage)),
         mode: InsertMode.insertOrReplace);
 

@@ -39,7 +39,7 @@ final defaultTextTheme = const TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: "Baloo2",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.bold,
   ),
   titleLarge: TextStyle(

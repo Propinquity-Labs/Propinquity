@@ -84,7 +84,9 @@ class ConnectionsScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const StatisticsCard(),
+        StatisticsCard(
+          calculatedScore: connectionsObj.calculatedScore,
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
           child: Text(
