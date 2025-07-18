@@ -8,6 +8,7 @@ import "package:propinquity/presentation/widgets/connection_information_card.dar
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
 import "../../data/datasources/local/daos/connections_dao.dart";
+import "../widgets/modify_connection_button.dart";
 import "../widgets/statistics_card.dart";
 
 final connectionFieldProvider =
@@ -29,6 +30,7 @@ class ConnectionsScreen extends ConsumerWidget {
         ref.watch(connectionFieldProvider(connectionsObj.connectionsId));
 
     return MainLayout(
+      floatingActionButton: const ModifyConnectionButton(),
       title: connectionsObj.connectionsName,
       body: <Widget>[
         Padding(
@@ -36,7 +38,7 @@ class ConnectionsScreen extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               if (connectionsObj.image != null)
                 Flexible(
                     flex: 1,
