@@ -77,7 +77,12 @@ void main() {
     final List<ConnectionsFieldsTableData> allFields =
         await db.select(db.connectionsFieldsTable).get();
     expect(allFields.length, 3);
-    expect(allFields.map((ConnectionsFieldsTableData f) => f.fieldType),
-        containsAll(<String>["email", "phone", "birthday"]));
+    expect(
+        allFields.map((ConnectionsFieldsTableData f) => f.fieldType),
+        containsAll(<FieldType>[
+          FieldType.email,
+          FieldType.phone,
+          FieldType.dateBirthday
+        ]));
   });
 }
