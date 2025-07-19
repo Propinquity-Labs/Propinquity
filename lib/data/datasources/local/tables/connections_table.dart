@@ -8,7 +8,7 @@ class ConnectionsTable extends Table {
   Column<String> get connectionsRelation =>
       text().named("connections_relation")();
   Column<Uint8List> get image => blob().nullable()();
-  IntColumn get streak => integer().clientDefault(() => 1)();
+  IntColumn get streak => integer().clientDefault(() => 0)();
   IntColumn get calculatedScore =>
       integer().nullable().named("calculated_score")();
   Column<bool> get checkIn =>
