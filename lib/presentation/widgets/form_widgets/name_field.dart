@@ -1,4 +1,4 @@
-import "package:flutter/widgets.dart";
+import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/state/connections_form_controller.dart";
 
@@ -12,11 +12,11 @@ class NameField extends ConsumerStatefulWidget {
 }
 
 class _NameFieldState extends ConsumerState {
-  final nameFieldStateController = TextEditingController();
+  final _nameFieldStateController = TextEditingController();
 
   @override
   void dispose() {
-    nameFieldStateController.dispose();
+    _nameFieldStateController.dispose();
     super.dispose();
   }
 
@@ -25,8 +25,20 @@ class _NameFieldState extends ConsumerState {
     // TODO: implement build
     ref.listen<String?>(formController.select((value) => value.connectionsName),
         (_, state) {
-      nameFieldStateController.text = state ?? '';
+      _nameFieldStateController.text = state ?? "";
     });
-    throw UnimplementedError();
+    return TextFormField(
+      maxLines: 1,
+      decoration: const InputDecoration(hintText: "Type name here"),
+      controller: _nameFieldStateController,
+      onChanged: (String value) =>
+          ref.read(formController.notifier).connectionsName = value,
+      validator: (String? value) {
+        if (value == null || value.isEmpty) {
+          return "A connection needs a name";
+        }
+        return null;
+      },
+    );
   }
 }

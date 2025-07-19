@@ -76,7 +76,22 @@ final defaultTextTheme = const TextTheme(
   ),
 );
 
+final InputDecorationTheme defaultInputDecorationTheme = InputDecorationTheme(
+    hintStyle: defaultTextTheme.bodyMedium,
+    filled: true,
+    fillColor: Colors.grey,
+    enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(30)),
+    border: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(30)),
+    errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.red),
+        borderRadius: BorderRadius.circular(30)));
+
 final ThemeData defaultTheme = ThemeData(
+    inputDecorationTheme: defaultInputDecorationTheme,
     colorScheme: defaultColorScheme,
     textTheme: defaultTextTheme.apply(
       bodyColor: defaultColorScheme.onSurface,

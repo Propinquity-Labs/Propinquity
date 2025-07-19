@@ -3,6 +3,7 @@ import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/presentation/widgets/form_widgets/name_field.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
 class ModifyScreen extends ConsumerWidget {
@@ -48,6 +49,7 @@ class ModifyScreen extends ConsumerWidget {
           child: Text("Name", style: Theme.of(context).textTheme.displaySmall),
         ),
         // Name field
+        const NameField(),
         Padding(
           padding: EdgeInsets.zero,
           child: Text("Roughly how frequently do you want to communicate?",
