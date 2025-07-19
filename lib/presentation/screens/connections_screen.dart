@@ -1,23 +1,166 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:propinquity/application/providers/connections_provider.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/data/models/field_models.dart";
+import "package:propinquity/presentation/widgets/additional_field.dart";
+import "package:propinquity/presentation/widgets/connection_information_card.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
+
+import "../../data/datasources/local/daos/connections_dao.dart";
+import "../widgets/modify_connection_button.dart";
+import "../widgets/statistics_card.dart";
+
+final connectionFieldProvider =
+    StreamProvider.family<List<ConnectionsFieldsTableData>, int>((ref, id) {
+  final ConnectionsDAO dao = ref.watch(connectionsDaoProvider);
+  return dao.watchFieldsByConnectionID(id);
+});
 
 class ConnectionsScreen extends ConsumerWidget {
   const ConnectionsScreen({super.key, required this.connectionsObj});
   final ConnectionsTableData connectionsObj;
+  final double size = 200;
+
+  // TODO: Change size based on screen size
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+    final AsyncValue<List<ConnectionsFieldsTableData>> asyncFields =
+        ref.watch(connectionFieldProvider(connectionsObj.connectionsId));
+
     return MainLayout(
+      floatingActionButton: const ModifyConnectionButton(),
       title: connectionsObj.connectionsName,
       body: <Widget>[
-        if (connectionsObj.image != null)
-          Center(
-              child: Image.memory(
-            connectionsObj.image!,
-            height: 400,
-          )),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (connectionsObj.image != null)
+                Flexible(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Container(
+                        width: size,
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(0, 0, 0, 0.1),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.memory(
+                              connectionsObj.image!,
+                              width: size,
+                              fit: BoxFit.fitWidth,
+                            )),
+                      ),
+                    )),
+              Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                          child: ConnectionInformationCard(
+                              bodyString: connectionsObj.connectionsRelation,
+                              headerString: "Relationship to You:"),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            child: ConnectionInformationCard(
+                                bodyString: connectionsObj.contactFrequency,
+                                headerString: "How Often You Communicate:"))
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+        ),
+        StatisticsCard(
+          calculatedScore: connectionsObj.calculatedScore,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+          child: Text(
+            "Important Dates",
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            asyncFields.when(
+                data: (List<ConnectionsFieldsTableData> fields) {
+                  // Check if important dates
+                  final List<ConnectionsFieldsTableData> dates = fields
+                      .where((ConnectionsFieldsTableData field) =>
+                          field.fieldType == FieldType.dateBirthday)
+                      .toList();
+                  return Flexible(
+                      child: Column(
+                    children: <Widget>[
+                      ...dates.map((ConnectionsFieldsTableData field) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: AdditionalField(
+                            fieldType: field.fieldType,
+                            fieldValue: field.fieldValue,
+                          ),
+                        );
+                      })
+                    ],
+                  ));
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (Object error, StackTrace stackTrace) =>
+                    Center(child: Text("Error: $error")))
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+          child: Text(
+            "Other Fields",
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            asyncFields.when(
+                data: (List<ConnectionsFieldsTableData> fields) {
+                  // Check if important dates
+                  final List<ConnectionsFieldsTableData> dates = fields
+                      .where((ConnectionsFieldsTableData field) =>
+                          field.fieldType != FieldType.dateBirthday)
+                      .toList();
+                  return Flexible(
+                      child: Column(
+                    children: <Widget>[
+                      ...dates.map((ConnectionsFieldsTableData field) {
+                        return Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: AdditionalField(
+                            fieldType: field.fieldType,
+                            fieldValue: field.fieldValue,
+                          ),
+                        );
+                      })
+                    ],
+                  ));
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (Object error, StackTrace stackTrace) =>
+                    Center(child: Text("Error: $error")))
+          ],
+        ),
       ],
     );
   }

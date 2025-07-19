@@ -1117,9 +1117,11 @@ class $ConnectionsFieldsTableTable extends ConnectionsFieldsTable
   static const VerificationMeta _fieldTypeMeta =
       const VerificationMeta('fieldType');
   @override
-  late final GeneratedColumn<String> fieldType = GeneratedColumn<String>(
-      'field_type', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<FieldType, int> fieldType =
+      GeneratedColumn<int>('field_type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<FieldType>(
+              $ConnectionsFieldsTableTable.$converterfieldType);
   static const VerificationMeta _fieldValueMeta =
       const VerificationMeta('fieldValue');
   @override
@@ -1164,12 +1166,7 @@ class $ConnectionsFieldsTableTable extends ConnectionsFieldsTable
     } else if (isInserting) {
       context.missing(_connectionsIdMeta);
     }
-    if (data.containsKey('field_type')) {
-      context.handle(_fieldTypeMeta,
-          fieldType.isAcceptableOrUnknown(data['field_type']!, _fieldTypeMeta));
-    } else if (isInserting) {
-      context.missing(_fieldTypeMeta);
-    }
+    context.handle(_fieldTypeMeta, const VerificationResult.success());
     if (data.containsKey('field_value')) {
       context.handle(
           _fieldValueMeta,
@@ -1208,8 +1205,9 @@ class $ConnectionsFieldsTableTable extends ConnectionsFieldsTable
           .read(DriftSqlType.int, data['${effectivePrefix}field_id'])!,
       connectionsId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}connections_id'])!,
-      fieldType: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}field_type'])!,
+      fieldType: $ConnectionsFieldsTableTable.$converterfieldType.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.int, data['${effectivePrefix}field_type'])!),
       fieldValue: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}field_value'])!,
       deletedAt: attachedDatabase.typeMapping
@@ -1223,13 +1221,16 @@ class $ConnectionsFieldsTableTable extends ConnectionsFieldsTable
   $ConnectionsFieldsTableTable createAlias(String alias) {
     return $ConnectionsFieldsTableTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<FieldType, int, int> $converterfieldType =
+      const EnumIndexConverter<FieldType>(FieldType.values);
 }
 
 class ConnectionsFieldsTableData extends DataClass
     implements Insertable<ConnectionsFieldsTableData> {
   final int fieldId;
   final int connectionsId;
-  final String fieldType;
+  final FieldType fieldType;
   final String fieldValue;
   final DateTime? deletedAt;
   final int fieldOrder;
@@ -1245,7 +1246,10 @@ class ConnectionsFieldsTableData extends DataClass
     final map = <String, Expression>{};
     map['field_id'] = Variable<int>(fieldId);
     map['connections_id'] = Variable<int>(connectionsId);
-    map['field_type'] = Variable<String>(fieldType);
+    {
+      map['field_type'] = Variable<int>(
+          $ConnectionsFieldsTableTable.$converterfieldType.toSql(fieldType));
+    }
     map['field_value'] = Variable<String>(fieldValue);
     if (!nullToAbsent || deletedAt != null) {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
@@ -1273,7 +1277,8 @@ class ConnectionsFieldsTableData extends DataClass
     return ConnectionsFieldsTableData(
       fieldId: serializer.fromJson<int>(json['fieldId']),
       connectionsId: serializer.fromJson<int>(json['connectionsId']),
-      fieldType: serializer.fromJson<String>(json['fieldType']),
+      fieldType: $ConnectionsFieldsTableTable.$converterfieldType
+          .fromJson(serializer.fromJson<int>(json['fieldType'])),
       fieldValue: serializer.fromJson<String>(json['fieldValue']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       fieldOrder: serializer.fromJson<int>(json['fieldOrder']),
@@ -1285,7 +1290,8 @@ class ConnectionsFieldsTableData extends DataClass
     return <String, dynamic>{
       'fieldId': serializer.toJson<int>(fieldId),
       'connectionsId': serializer.toJson<int>(connectionsId),
-      'fieldType': serializer.toJson<String>(fieldType),
+      'fieldType': serializer.toJson<int>(
+          $ConnectionsFieldsTableTable.$converterfieldType.toJson(fieldType)),
       'fieldValue': serializer.toJson<String>(fieldValue),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'fieldOrder': serializer.toJson<int>(fieldOrder),
@@ -1295,7 +1301,7 @@ class ConnectionsFieldsTableData extends DataClass
   ConnectionsFieldsTableData copyWith(
           {int? fieldId,
           int? connectionsId,
-          String? fieldType,
+          FieldType? fieldType,
           String? fieldValue,
           Value<DateTime?> deletedAt = const Value.absent(),
           int? fieldOrder}) =>
@@ -1355,7 +1361,7 @@ class ConnectionsFieldsTableCompanion
     extends UpdateCompanion<ConnectionsFieldsTableData> {
   final Value<int> fieldId;
   final Value<int> connectionsId;
-  final Value<String> fieldType;
+  final Value<FieldType> fieldType;
   final Value<String> fieldValue;
   final Value<DateTime?> deletedAt;
   final Value<int> fieldOrder;
@@ -1370,7 +1376,7 @@ class ConnectionsFieldsTableCompanion
   ConnectionsFieldsTableCompanion.insert({
     this.fieldId = const Value.absent(),
     required int connectionsId,
-    required String fieldType,
+    required FieldType fieldType,
     required String fieldValue,
     this.deletedAt = const Value.absent(),
     required int fieldOrder,
@@ -1381,7 +1387,7 @@ class ConnectionsFieldsTableCompanion
   static Insertable<ConnectionsFieldsTableData> custom({
     Expression<int>? fieldId,
     Expression<int>? connectionsId,
-    Expression<String>? fieldType,
+    Expression<int>? fieldType,
     Expression<String>? fieldValue,
     Expression<DateTime>? deletedAt,
     Expression<int>? fieldOrder,
@@ -1399,7 +1405,7 @@ class ConnectionsFieldsTableCompanion
   ConnectionsFieldsTableCompanion copyWith(
       {Value<int>? fieldId,
       Value<int>? connectionsId,
-      Value<String>? fieldType,
+      Value<FieldType>? fieldType,
       Value<String>? fieldValue,
       Value<DateTime?>? deletedAt,
       Value<int>? fieldOrder}) {
@@ -1423,7 +1429,9 @@ class ConnectionsFieldsTableCompanion
       map['connections_id'] = Variable<int>(connectionsId.value);
     }
     if (fieldType.present) {
-      map['field_type'] = Variable<String>(fieldType.value);
+      map['field_type'] = Variable<int>($ConnectionsFieldsTableTable
+          .$converterfieldType
+          .toSql(fieldType.value));
     }
     if (fieldValue.present) {
       map['field_value'] = Variable<String>(fieldValue.value);
@@ -2267,7 +2275,7 @@ typedef $$ConnectionsFieldsTableTableCreateCompanionBuilder
     = ConnectionsFieldsTableCompanion Function({
   Value<int> fieldId,
   required int connectionsId,
-  required String fieldType,
+  required FieldType fieldType,
   required String fieldValue,
   Value<DateTime?> deletedAt,
   required int fieldOrder,
@@ -2276,7 +2284,7 @@ typedef $$ConnectionsFieldsTableTableUpdateCompanionBuilder
     = ConnectionsFieldsTableCompanion Function({
   Value<int> fieldId,
   Value<int> connectionsId,
-  Value<String> fieldType,
+  Value<FieldType> fieldType,
   Value<String> fieldValue,
   Value<DateTime?> deletedAt,
   Value<int> fieldOrder,
@@ -2315,8 +2323,10 @@ class $$ConnectionsFieldsTableTableFilterComposer
   ColumnFilters<int> get fieldId => $composableBuilder(
       column: $table.fieldId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get fieldType => $composableBuilder(
-      column: $table.fieldType, builder: (column) => ColumnFilters(column));
+  ColumnWithTypeConverterFilters<FieldType, FieldType, int> get fieldType =>
+      $composableBuilder(
+          column: $table.fieldType,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
   ColumnFilters<String> get fieldValue => $composableBuilder(
       column: $table.fieldValue, builder: (column) => ColumnFilters(column));
@@ -2360,7 +2370,7 @@ class $$ConnectionsFieldsTableTableOrderingComposer
   ColumnOrderings<int> get fieldId => $composableBuilder(
       column: $table.fieldId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get fieldType => $composableBuilder(
+  ColumnOrderings<int> get fieldType => $composableBuilder(
       column: $table.fieldType, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get fieldValue => $composableBuilder(
@@ -2405,7 +2415,7 @@ class $$ConnectionsFieldsTableTableAnnotationComposer
   GeneratedColumn<int> get fieldId =>
       $composableBuilder(column: $table.fieldId, builder: (column) => column);
 
-  GeneratedColumn<String> get fieldType =>
+  GeneratedColumnWithTypeConverter<FieldType, int> get fieldType =>
       $composableBuilder(column: $table.fieldType, builder: (column) => column);
 
   GeneratedColumn<String> get fieldValue => $composableBuilder(
@@ -2467,7 +2477,7 @@ class $$ConnectionsFieldsTableTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<int> fieldId = const Value.absent(),
             Value<int> connectionsId = const Value.absent(),
-            Value<String> fieldType = const Value.absent(),
+            Value<FieldType> fieldType = const Value.absent(),
             Value<String> fieldValue = const Value.absent(),
             Value<DateTime?> deletedAt = const Value.absent(),
             Value<int> fieldOrder = const Value.absent(),
@@ -2483,7 +2493,7 @@ class $$ConnectionsFieldsTableTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             Value<int> fieldId = const Value.absent(),
             required int connectionsId,
-            required String fieldType,
+            required FieldType fieldType,
             required String fieldValue,
             Value<DateTime?> deletedAt = const Value.absent(),
             required int fieldOrder,

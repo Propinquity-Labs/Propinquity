@@ -6,6 +6,7 @@ import "package:propinquity/data/datasources/local/drift_database.dart";
 import "package:propinquity/data/datasources/local/tables/connections_fields_table.dart";
 import "package:propinquity/data/datasources/local/tables/connections_table.dart";
 import "package:propinquity/data/datasources/local/tables/dates_table.dart";
+import "package:propinquity/data/models/field_models.dart"; // Needs to be in here
 
 part "connections_dao.g.dart";
 
@@ -64,6 +65,28 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
         .write(const ConnectionsTableCompanion(checkIn: Value<bool>(false)));
   }
 
+  Future<ConnectionsTableData?> getConnectionByID(int connectionId) async {
+    return (await (select(connectionsTable)
+          ..where(($ConnectionsTableTable conTbl) =>
+              conTbl.connectionsId.equals(connectionId)))
+        .getSingleOrNull());
+  }
+
+  Future<List<ConnectionsTableData>> getAllFields() =>
+      select(connectionsTable).get();
+
+  Future<List<ConnectionsFieldsTableData>> getFieldsByConnectionID(int id) =>
+      (select(connectionsFieldsTable)
+            ..where(($ConnectionsFieldsTableTable tbl) =>
+                tbl.connectionsId.equals(id)))
+          .get();
+
+  Stream<List<ConnectionsFieldsTableData>> watchFieldsByConnectionID(int id) =>
+      (select(connectionsFieldsTable)
+            ..where(($ConnectionsFieldsTableTable tbl) =>
+                tbl.connectionsId.equals(id)))
+          .watch();
+
   Future<void> insertExampleData() async {
     final Uint8List larryImage =
         (await rootBundle.load("lib/assets/test_images/test_2_1_larry.png"))
@@ -87,6 +110,7 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
             connectionsName: const Value<String>("Good Larry"),
             contactFrequency: const Value<String>("Weekly"),
             connectionsRelation: const Value<String>("Friends"),
+            calculatedScore: const Value<int>(69),
             image: Value<Uint8List?>(larryImage)),
         mode: InsertMode.insertOrReplace);
 
@@ -95,21 +119,21 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(1),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("email"),
+        fieldType: const Value(FieldType.email),
         fieldValue: const Value<String>("test@example.com"),
         fieldOrder: const Value<int>(0),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(2),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("phone"),
+        fieldType: const Value(FieldType.phone),
         fieldValue: const Value<String>("555-1234"),
         fieldOrder: const Value<int>(1),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(3),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("birthday"),
+        fieldType: const Value(FieldType.dateBirthday),
         fieldValue: const Value<String>("1990-01-01"),
         fieldOrder: const Value<int>(2),
       ),
@@ -135,21 +159,21 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(4),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("email"),
+        fieldType: const Value(FieldType.email),
         fieldValue: const Value<String>("test@example.com"),
         fieldOrder: const Value<int>(0),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(5),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("phone"),
+        fieldType: const Value(FieldType.phone),
         fieldValue: const Value<String>("250-555-1234"),
         fieldOrder: const Value<int>(1),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(6),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("birthday"),
+        fieldType: const Value(FieldType.dateBirthday),
         fieldValue: const Value<String>("1991-06-15"),
         fieldOrder: const Value<int>(2),
       ),
@@ -175,21 +199,21 @@ class ConnectionsDAO extends DatabaseAccessor<AppDatabase>
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(7),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("email"),
+        fieldType: const Value(FieldType.email),
         fieldValue: const Value<String>("theCreature@example.com"),
         fieldOrder: const Value<int>(0),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(8),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("phone"),
+        fieldType: const Value(FieldType.phone),
         fieldValue: const Value<String>("250-555-1234"),
         fieldOrder: const Value<int>(1),
       ),
       ConnectionsFieldsTableCompanion(
         fieldId: const Value<int>(9),
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("birthday"),
+        fieldType: const Value(FieldType.dateBirthday),
         fieldValue: const Value<String>("2025-07-10"),
         fieldOrder: const Value<int>(2),
       ),

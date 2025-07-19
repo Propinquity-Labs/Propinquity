@@ -1,3 +1,5 @@
+import "dart:typed_data";
+
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
@@ -52,8 +54,36 @@ final Provider<GoRouter> goRouterProvider =
             GoRoute(
                 path: "/contact",
                 builder: (BuildContext context, GoRouterState state) {
-                  final ConnectionsTableData connectionsObj =
-                      state.extra! as ConnectionsTableData;
+                  ConnectionsTableData connectionsObj;
+                  try {
+                    connectionsObj = state.extra! as ConnectionsTableData;
+                  } catch (e) {
+                    if (state.extra is Map<String, dynamic>) {
+                      final Map<String, dynamic> uncastableObject =
+                          state.extra as Map<String, dynamic>;
+                      connectionsObj = ConnectionsTableData(
+                          connectionsId: uncastableObject["connectionsId"],
+                          connectionsName: uncastableObject["connectionsName"],
+                          contactFrequency:
+                              uncastableObject["contactFrequency"],
+                          connectionsRelation:
+                              uncastableObject["connectionsRelation"],
+                          calculatedScore: uncastableObject["calculatedScore"],
+                          image: Uint8List.fromList(
+                              uncastableObject["image"].cast<int>().toList()),
+                          streak: uncastableObject["streak"],
+                          checkIn: uncastableObject["checkIn"]);
+                    } else {
+                      connectionsObj = const ConnectionsTableData(
+                          connectionsId: 99,
+                          connectionsName: "Error",
+                          contactFrequency: "ERROR",
+                          connectionsRelation: "ERROR",
+                          streak: 999,
+                          checkIn: false);
+                    }
+                  }
+
                   return ConnectionsScreen(connectionsObj: connectionsObj);
                 })
           ]),

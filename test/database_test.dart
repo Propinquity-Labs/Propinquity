@@ -3,6 +3,7 @@ import "package:drift/native.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:propinquity/data/datasources/local/drift_database.dart";
+import "package:propinquity/data/models/field_models.dart";
 
 void main() {
   late AppDatabase db;
@@ -44,19 +45,19 @@ void main() {
         <ConnectionsFieldsTableCompanion>[
       ConnectionsFieldsTableCompanion(
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("email"),
+        fieldType: const Value(FieldType.email),
         fieldValue: const Value<String>("test@example.com"),
         fieldOrder: const Value<int>(0),
       ),
       ConnectionsFieldsTableCompanion(
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("phone"),
+        fieldType: const Value(FieldType.phone),
         fieldValue: const Value<String>("555-1234"),
         fieldOrder: const Value<int>(1),
       ),
       ConnectionsFieldsTableCompanion(
         connectionsId: Value<int>(connectionId),
-        fieldType: const Value<String>("birthday"),
+        fieldType: const Value(FieldType.dateBirthday),
         fieldValue: const Value<String>("1990-01-01"),
         fieldOrder: const Value<int>(2),
       ),
@@ -76,7 +77,12 @@ void main() {
     final List<ConnectionsFieldsTableData> allFields =
         await db.select(db.connectionsFieldsTable).get();
     expect(allFields.length, 3);
-    expect(allFields.map((ConnectionsFieldsTableData f) => f.fieldType),
-        containsAll(<String>["email", "phone", "birthday"]));
+    expect(
+        allFields.map((ConnectionsFieldsTableData f) => f.fieldType),
+        containsAll(<FieldType>[
+          FieldType.email,
+          FieldType.phone,
+          FieldType.dateBirthday
+        ]));
   });
 }
