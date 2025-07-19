@@ -1,4 +1,4 @@
-import "package:flutter/widgets.dart";
+import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/state/connections_form_controller.dart";
 
@@ -20,13 +20,30 @@ class _FrequencyFieldState extends ConsumerState {
     super.dispose();
   }
 
+  List<String> dropDownItems = [
+    "Daily",
+    "Every other day",
+    "Bi-Weekly",
+    "Weekends",
+    "Bi-monthly",
+    "Monthly"
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    ref.listen<String?>(formController.select((value) => value.connectionsName),
-        (_, state) {
+    ref.listen<String?>(
+        formController.select((value) => value.contactFrequency), (_, state) {
       frequencyFieldStateController.text = state ?? '';
     });
-    throw UnimplementedError();
+    return DropdownButtonFormField(
+      onChanged: (dynamic value) =>
+          ref.watch(formController.notifier).connectionsFrequency = value,
+      items: dropDownItems.map((String freq) {
+        return DropdownMenuItem<String>(
+          value: freq,
+          child: Text(freq, style: Theme.of(context).textTheme.bodyMedium),
+        );
+      }).toList(),
+    );
   }
 }
