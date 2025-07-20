@@ -1,7 +1,6 @@
-import "dart:typed_data";
-
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:image_cropper/image_cropper.dart";
 import "package:image_picker/image_picker.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:propinquity/application/state/connections_form_controller.dart";
@@ -26,20 +25,7 @@ class _ImageFieldState extends ConsumerState {
       content: Text(
           "Permissions not granted, please enable permissions in settings"));
 
-  Uint8List? _imageBytes;
-
-  @override
-  void initState() {
-    super.initState();
-    ref.listen<Uint8List?>(
-      formController.select((value) => value.image),
-      (_, state) {
-        setState(() {
-          _imageBytes = state;
-        });
-      },
-    );
-  }
+  final ImageCropper _imageCropper = ImageCropper();
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +49,20 @@ class _ImageFieldState extends ConsumerState {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
-        final Uint8List? tmpImageBytes = await (await _picker.pickImage(
-                maxHeight: 256, maxWidth: 256, source: ImageSource.gallery))
-            ?.readAsBytes();
-        if (tmpImageBytes != null) {
-          ref.read(formController.notifier).image = tmpImageBytes;
+        final XFile? tmpImageFile =
+            (await _picker.pickImage(source: ImageSource.gallery));
+        if (tmpImageFile != null) {
+          final CroppedFile? tmpCroppedImageFile =
+              await _imageCropper.cropImage(
+                  sourcePath: tmpImageFile.path,
+                  maxWidth: 256,
+                  maxHeight: 256,
+                  compressQuality: 80,
+                  aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+          if (tmpCroppedImageFile != null) {
+            ref.read(formController.notifier).image =
+                await tmpCroppedImageFile.readAsBytes();
+          }
         }
       },
       child: Container(
