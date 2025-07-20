@@ -7,6 +7,8 @@ import "package:propinquity/presentation/widgets/form_widgets/frequency_field.da
 import "package:propinquity/presentation/widgets/form_widgets/name_field.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
+import "../widgets/form_widgets/relations_field.dart";
+
 class ModifyScreen extends ConsumerStatefulWidget {
   const ModifyScreen(
       {super.key,
@@ -60,6 +62,7 @@ class _ModifyScreenState extends ConsumerState<ModifyScreen> {
                   "Roughly, what would you say your relationship status is",
                   style: Theme.of(context).textTheme.displaySmall),
             ),
+            const RelationsField(),
             // Any important dates you don’t want to miss?
             Padding(
               padding: EdgeInsets.zero,
