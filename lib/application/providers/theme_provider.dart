@@ -80,6 +80,8 @@ final InputDecorationTheme defaultInputDecorationTheme = InputDecorationTheme(
     hintStyle: defaultTextTheme.bodyMedium,
     filled: true,
     fillColor: Colors.grey,
+    contentPadding:
+        const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 6),
     enabledBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.grey),
         borderRadius: BorderRadius.circular(30)),
@@ -88,7 +90,17 @@ final InputDecorationTheme defaultInputDecorationTheme = InputDecorationTheme(
         borderRadius: BorderRadius.circular(30)),
     errorBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.red),
-        borderRadius: BorderRadius.circular(30)));
+        borderRadius: BorderRadius.circular(30)),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.grey),
+      borderRadius: BorderRadius.circular(30),
+    ),
+    disabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.grey),
+      borderRadius: BorderRadius.circular(30),
+    ),
+    outlineBorder:
+        const BorderSide(color: Colors.grey, style: BorderStyle.none));
 
 final ThemeData defaultTheme = ThemeData(
     inputDecorationTheme: defaultInputDecorationTheme,

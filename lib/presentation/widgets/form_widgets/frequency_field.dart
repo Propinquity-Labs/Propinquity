@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:propinquity/application/state/connections_form_controller.dart";
+import "package:propinquity/data/models/connections_form_model.dart";
 
 class FrequencyField extends ConsumerStatefulWidget {
   const FrequencyField({super.key});
@@ -23,7 +24,7 @@ class _FrequencyFieldState extends ConsumerState {
   List<String> dropDownItems = [
     "Daily",
     "Every other day",
-    "Bi-Weekly",
+    "Bi-weekly",
     "Weekends",
     "Bi-monthly",
     "Monthly"
@@ -32,10 +33,13 @@ class _FrequencyFieldState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
     ref.listen<String?>(
-        formController.select((value) => value.contactFrequency), (_, state) {
-      frequencyFieldStateController.text = state ?? '';
+        formController
+            .select((ConnectionsFormModel value) => value.contactFrequency),
+        (_, state) {
+      frequencyFieldStateController.text = state ?? "";
     });
-    return DropdownButtonFormField(
+    return DropdownButtonFormField<String>(
+      dropdownColor: Theme.of(context).colorScheme.surface.withAlpha(220),
       onChanged: (dynamic value) =>
           ref.watch(formController.notifier).connectionsFrequency = value,
       items: dropDownItems.map((String freq) {

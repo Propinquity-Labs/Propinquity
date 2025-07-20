@@ -52,7 +52,7 @@ class _ModifyScreenState extends ConsumerState<ModifyScreen> {
               child: Text("Roughly how frequently do you want to communicate?",
                   style: Theme.of(context).textTheme.displaySmall),
             ),
-            FrequencyField(),
+            const FrequencyField(),
             // Roughly how frequently do you want to communicate?
             Padding(
               padding: EdgeInsets.zero,
