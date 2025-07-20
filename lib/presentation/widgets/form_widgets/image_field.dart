@@ -20,12 +20,11 @@ class _ImageFieldState extends ConsumerState {
     super.dispose();
   }
 
+  final ImageCropper _imageCropper = ImageCropper();
   final ImagePicker _picker = ImagePicker();
   final SnackBar snackBar = const SnackBar(
       content: Text(
           "Permissions not granted, please enable permissions in settings"));
-
-  final ImageCropper _imageCropper = ImageCropper();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class _ImageFieldState extends ConsumerState {
                   sourcePath: tmpImageFile.path,
                   maxWidth: 256,
                   maxHeight: 256,
-                  compressQuality: 80,
+                  compressQuality: 100,
                   aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
           if (tmpCroppedImageFile != null) {
             ref.read(formController.notifier).image =
@@ -69,7 +68,7 @@ class _ImageFieldState extends ConsumerState {
         constraints: const BoxConstraints(
             minHeight: 128, minWidth: 128, maxWidth: 256, maxHeight: 256),
         decoration: BoxDecoration(
-            color: Colors.grey, borderRadius: BorderRadius.circular(20)),
+            color: Colors.grey, borderRadius: BorderRadius.circular(30)),
         child: imageBytes != null
             ? Center(
                 child: Stack(children: <Widget>[
@@ -78,11 +77,16 @@ class _ImageFieldState extends ConsumerState {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(30)),
                         child: Image.memory(imageBytes))),
-                const Center(
-                  child: Icon(Icons.camera_alt_outlined),
+                Center(
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    weight: 10,
+                    color: Theme.of(context).colorScheme.surface.withAlpha(180),
+                    size: 128,
+                  ),
                 )
               ]))
-            : const Icon(Icons.camera_alt_outlined),
+            : const Icon(Icons.camera_alt_outlined, size: 128),
       ),
     );
   }
