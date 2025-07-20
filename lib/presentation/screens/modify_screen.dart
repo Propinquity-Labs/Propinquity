@@ -7,6 +7,7 @@ import "package:propinquity/presentation/widgets/form_widgets/frequency_field.da
 import "package:propinquity/presentation/widgets/form_widgets/name_field.dart";
 import "package:propinquity/presentation/widgets/main_layout.dart";
 
+import "../widgets/form_widgets/image_field.dart";
 import "../widgets/form_widgets/relations_field.dart";
 
 class ModifyScreen extends ConsumerStatefulWidget {
@@ -41,7 +42,8 @@ class _ModifyScreenState extends ConsumerState<ModifyScreen> {
       body: <Widget>[
         Form(
             child: Column(
-          children: [
+          children: <Widget>[
+            const ImageField(),
             Padding(
               padding: EdgeInsets.zero,
               child:

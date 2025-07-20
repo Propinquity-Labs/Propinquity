@@ -26,7 +26,7 @@ class ConnectionsFormController extends Notifier<ConnectionsFormModel> {
   set connectionsFields(List<ConnectionsFieldsTableData> fields) =>
       state = state.copyWith(fields: fields);
 
-  set image(Uint8List bytes) => state = state.copyWith(image: bytes);
+  set image(Uint8List? bytes) => state = state.copyWith(image: bytes);
 
   set connectionsId(int id) => state = state.copyWith(connectionsId: id);
 
