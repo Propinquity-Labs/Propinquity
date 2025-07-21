@@ -35,7 +35,7 @@ class _FrequencyFieldState extends ConsumerState {
     ref.listen<String?>(
         formController
             .select((ConnectionsFormModel value) => value.contactFrequency),
-        (_, state) {
+        (_, String? state) {
       frequencyFieldStateController.text = state ?? "";
     });
     return DropdownButtonFormField<String>(

@@ -2,6 +2,8 @@ import "dart:typed_data";
 
 import "package:propinquity/data/datasources/local/drift_database.dart";
 
+const _noValue = Object();
+
 class ConnectionsFormModel {
   ConnectionsFormModel(
       {this.connectionsId,
@@ -20,7 +22,7 @@ class ConnectionsFormModel {
 
   ConnectionsFormModel copyWith({
     int? connectionsId,
-    Uint8List? image,
+    Object? image = _noValue,
     String? connectionsName,
     String? contactFrequency,
     String? connectionsRelation,
@@ -28,7 +30,7 @@ class ConnectionsFormModel {
   }) {
     return ConnectionsFormModel(
       connectionsId: connectionsId ?? this.connectionsId,
-      image: image,
+      image: identical(image, _noValue) ? this.image : image as Uint8List?,
       connectionsName: connectionsName ?? this.connectionsName,
       contactFrequency: contactFrequency ?? this.contactFrequency,
       connectionsRelation: connectionsRelation ?? this.connectionsRelation,
