@@ -28,7 +28,7 @@ class ConnectionsFormModel {
   }) {
     return ConnectionsFormModel(
       connectionsId: connectionsId ?? this.connectionsId,
-      image: image ?? this.image,
+      image: image,
       connectionsName: connectionsName ?? this.connectionsName,
       contactFrequency: contactFrequency ?? this.contactFrequency,
       connectionsRelation: connectionsRelation ?? this.connectionsRelation,
